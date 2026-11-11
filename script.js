@@ -13,24 +13,58 @@ function focusUserLocation(){if(!navigator.geolocation||!map)return;navigator.ge
 function resetCurrentRoute(){points=[];distance=0;elapsed=0;lastAcceptedTime=0;voiceHalf=false;voiceNear=false;hasCentered=false;if(routeLine)routeLine.setLatLngs([]);if(marker&&map){map.removeLayer(marker);marker=null}updateLive();focusUserLocation()}
 function startRun(){if(running||starting)return;if(!navigator.geolocation){alert('Seu navegador não oferece geolocalização.');return}initMap();starting=true;resetCurrentRoute();$('startcontrols').classList.add('hide');$('countdown').classList.remove('hide');let count=5;$('countnumber').textContent=count;speakCountdown(count);countdownTimer=setInterval(()=>{count--;if(count>0){$('countnumber').textContent=count;speakCountdown(count);return}clearInterval(countdownTimer);countdownTimer=null;$('countnumber').textContent='VAI!';speakCountdown(0);setTimeout(()=>{$('countdown').classList.add('hide');starting=false;beginTracking()},450)},1000)}
 function beginTracking(){running=true;paused=false;updateActivityUI();$('activecontrols').classList.remove('hide');$('pausebtn').innerHTML='<i data-lucide="pause"></i> PAUSAR';lastTick=Date.now();timer=setInterval(()=>{const now=Date.now();if(!paused)elapsed+=(now-lastTick)/1000;lastTick=now;updateLive()},250);watchId=navigator.geolocation.watchPosition(onPosition,onGpsError,{enableHighAccuracy:true,maximumAge:0,timeout:15000});updateLive()}
-function togglePause(){paused=!paused;updateActivityUI();lastTick=Date.now();$('pausebtn').innerHTML=paused?'<i data-lucide="play"></i> RETOMAR':'<i data-lucide="pause"></i> PAUSAR'}function finishRun(){if(!running)return;clearInterval(timer);if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;running=false;paused=false;updateActivityUI();$('activecontrols').classList.add('hide');$('startcontrols').classList.remove('hide');let run={id:Date.now(),mode,km:distance,seconds:Math.round(elapsed),calories:estimatedCalories(distance,mode),date:new Date().toISOString(),route:points.map(p=>[p.lat,p.lng])};data.runs.unshift(run);save();render();showFinishSponsor(run)}function showResult(r){const t=formatTime(r.seconds),pk=formatPace(r);openModal(`<div class="sharecard"><div class="eyebrow" style="color:#b6f43c">MOVE+ • ATIVIDADE CONCLUÍDA</div><div style="font-size:38px;margin:14px"><i data-lucide="award"></i></div><strong>${r.km.toFixed(2).replace('.',',')} km</strong><small>${r.mode} • ${t} • ${pk}/km • ${r.calories??estimatedCalories(r.km,r.mode)} kcal</small><p style="margin-top:16px;font-size:13px">Cada passo é uma conquista.</p></div><button class="bigbtn" onclick="shareRun(${r.id},false)"><i data-lucide="share-2"></i> Compartilhar imagem</button><button class="bigbtn dark" onclick="shareRun(${r.id},true)"><i data-lucide="image"></i> PNG transparente para fotos</button><button class="bigbtn dark" onclick="closeModal();showScreen('progress')">Ver meu progresso</button>`)}function formatPace(r){return paceText(r.seconds,r.km)}
+function togglePause(){paused=!paused;updateActivityUI();lastTick=Date.now();$('pausebtn').innerHTML=paused?'<i data-lucide="play"></i> RETOMAR':'<i data-lucide="pause"></i> PAUSAR'}function finishRun(){if(!running)return;clearInterval(timer);if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;running=false;paused=false;updateActivityUI();$('activecontrols').classList.add('hide');$('startcontrols').classList.remove('hide');let run={id:Date.now(),mode,km:distance,seconds:Math.round(elapsed),calories:estimatedCalories(distance,mode),date:new Date().toISOString(),route:points.map(p=>[p.lat,p.lng])};data.runs.unshift(run);save();render();showFinishSponsor(run)}function showResult(r){const t=formatTime(r.seconds),pk=formatPace(r);openModal(`<div class="sharecard"><div class="eyebrow" style="color:#b6f43c">MOVE+ • ATIVIDADE CONCLUÍDA</div><div style="font-size:38px;margin:14px"><i data-lucide="award"></i></div><strong>${r.km.toFixed(2).replace('.',',')} km</strong><small>${r.mode} • ${t} • ${pk}/km • ${r.calories??estimatedCalories(r.km,r.mode)} kcal</small><p style="margin-top:16px;font-size:13px">Cada passo é uma conquista.</p>${routePreviewHtml(r)}</div><button class="bigbtn" onclick="shareRun(${r.id},false)"><i data-lucide="share-2"></i> Compartilhar imagem</button><button class="bigbtn dark" onclick="shareRun(${r.id},true)"><i data-lucide="image"></i> PNG transparente para fotos</button><button class="bigbtn dark" onclick="closeModal();showScreen('progress')">Ver meu progresso</button>`)}function formatPace(r){return paceText(r.seconds,r.km)}
+
+// Desenha somente o percurso real registrado pelo GPS, sem simular trajetos.
+function routeCoordinates(route,width,height,pad=28){
+ if(!Array.isArray(route))return [];
+ const pts=route.filter(p=>Array.isArray(p)&&p.length>=2&&Number.isFinite(+p[0])&&Number.isFinite(+p[1]));
+ if(pts.length<2)return [];
+ const meanLat=pts.reduce((sum,p)=>sum+(+p[0]),0)/pts.length;
+ const factor=Math.cos(meanLat*Math.PI/180);
+ const coords=pts.map(p=>({x:(+p[1])*factor,y:-(+p[0])}));
+ const xs=coords.map(p=>p.x),ys=coords.map(p=>p.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+ const spanX=Math.max(xmax-xmin,1e-8),spanY=Math.max(ymax-ymin,1e-8);
+ const scale=Math.min((width-pad*2)/spanX,(height-pad*2)/spanY);
+ const ox=(width-spanX*scale)/2,oy=(height-spanY*scale)/2;
+ return coords.map(p=>({x:ox+(p.x-xmin)*scale,y:oy+(p.y-ymin)*scale}));
+}
+function drawRouteOnCanvas(c,route,x,y,w,h,transparent=false){
+ const pts=routeCoordinates(route,w,h,36);
+ if(!pts.length)return false;
+ c.save();c.translate(x,y);c.lineCap='round';c.lineJoin='round';
+ c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.strokeStyle=transparent?'rgba(0,0,0,.9)':'rgba(0,0,0,.55)';c.lineWidth=24;c.stroke();
+ c.strokeStyle='#b6f43c';c.lineWidth=13;c.stroke();
+ for(const [p,color] of [[pts[0],'#fff'],[pts[pts.length-1],'#b6f43c']]){c.beginPath();c.arc(p.x,p.y,13,0,Math.PI*2);c.fillStyle=color;c.fill();c.strokeStyle='#142000';c.lineWidth=4;c.stroke()}
+ c.restore();return true;
+}
+function routePreviewHtml(r){
+ const pts=routeCoordinates(r.route,310,150,15);
+ if(!pts.length)return '<p class="route-empty">Percurso não disponível: GPS insuficiente nesta atividade.</p>';
+ const path=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');
+ return `<div class="route-preview"><div class="route-caption">SEU PERCURSO GPS</div><svg viewBox="0 0 310 150" role="img" aria-label="Traçado do percurso da atividade"><path d="${path}" stroke="#b6f43c" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${pts[0].x}" cy="${pts[0].y}" r="6" fill="white"/><circle cx="${pts[pts.length-1].x}" cy="${pts[pts.length-1].y}" r="6" fill="#b6f43c"/></svg></div>`;
+}
+
 async function shareRun(id,transparent=false){
  const r=data.runs.find(x=>x.id===id);if(!r)return;
  const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const c=canvas.getContext('2d');
  const lime='#b6f43c',ink='#101718',white='#ffffff';
  if(!transparent){const bg=c.createLinearGradient(0,0,1080,1350);bg.addColorStop(0,'#1b2726');bg.addColorStop(1,'#090e10');c.fillStyle=bg;c.fillRect(0,0,1080,1350);c.fillStyle=lime;c.fillRect(0,0,1080,16);c.strokeStyle='rgba(182,244,60,.12)';for(let i=0;i<7;i++){c.beginPath();c.arc(920,360,130+i*70,0,Math.PI*2);c.stroke()}}
  const panel=(x,y,w,h)=>{c.fillStyle=transparent?'rgba(0,0,0,.72)':'#26332f';c.beginPath();c.roundRect(x,y,w,h,36);c.fill()};
- panel(54,70,972,transparent?1050:1160);
+ panel(54,70,972,transparent?1190:1210);
  c.fillStyle=lime;c.font='800 49px Arial';c.fillText('URUÇUÍ EM MOVIMENTO',96,165);
- c.fillStyle='#d5e2db';c.font='30px Arial';c.fillText('MINHA CONQUISTA  •  '+r.mode.toUpperCase(),96,245);
- c.fillStyle=white;c.font='900 190px Arial';c.fillText(r.km.toFixed(2).replace('.',','),87,485);
- c.fillStyle=lime;c.font='800 49px Arial';c.fillText('QUILÔMETROS',100,552);
- c.fillStyle='#d5e2db';c.font='32px Arial';c.fillText(new Date(r.date).toLocaleDateString('pt-BR')+'  •  '+(data.name||'Corredor'),98,625);
- c.fillStyle='rgba(255,255,255,.09)';c.beginPath();c.roundRect(92,700,896,245,30);c.fill();
- c.fillStyle=white;c.font='bold 67px Arial';c.fillText(formatTime(r.seconds),130,800);c.fillText(formatPace(r),590,800);
- c.fillStyle='#b8c8c0';c.font='29px Arial';c.fillText('TEMPO',130,861);c.fillText('RITMO / KM',590,861);
- c.fillStyle=lime;c.font='bold 36px Arial';c.fillText('CADA PASSO CONTA.',98,1040);
- if(!transparent){c.fillStyle='#c2d0c9';c.font='30px Arial';c.fillText('Nossa cidade, nosso ritmo.',98,1125);c.fillStyle=lime;c.fillRect(95,1190,145,7)}
+ c.fillStyle='#d5e2db';c.font='30px Arial';c.fillText('MINHA CONQUISTA  •  '+r.mode.toUpperCase(),96,225);
+ c.fillStyle=white;c.font='900 190px Arial';c.fillText(r.km.toFixed(2).replace('.',','),87,410);
+ c.fillStyle=lime;c.font='800 49px Arial';c.fillText('QUILÔMETROS',100,475);
+ c.fillStyle='#d5e2db';c.font='32px Arial';c.fillText(new Date(r.date).toLocaleDateString('pt-BR')+'  •  '+(data.name||'Corredor'),98,540);
+ const hasRoute=drawRouteOnCanvas(c,r.route,95,575,890,360,transparent);
+ if(!hasRoute){c.fillStyle='#b8c8c0';c.font='28px Arial';c.fillText('Percurso GPS não disponível nesta atividade',115,735)}
+ c.fillStyle='rgba(255,255,255,.09)';c.beginPath();c.roundRect(92,970,896,170,30);c.fill();
+ c.fillStyle=white;c.font='bold 67px Arial';c.fillText(formatTime(r.seconds),130,1050);c.fillText(formatPace(r),590,1050);
+ c.fillStyle='#b8c8c0';c.font='29px Arial';c.fillText('TEMPO',130,1103);c.fillText('RITMO / KM',590,1103);
+ c.fillStyle=lime;c.font='bold 36px Arial';c.fillText('CADA PASSO CONTA.',98,1190);
+ if(!transparent){c.fillStyle='#c2d0c9';c.font='30px Arial';c.fillText('Nossa cidade, nosso ritmo.',98,1250);c.fillStyle=lime;c.fillRect(95,1280,145,7)}
  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)return;
  const file=new File([blob],transparent?'corrida-sobre-foto.png':'minha-corrida-urucui.png',{type:'image/png'});
  try{if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Minha corrida • Uruçuí em Movimento'});return}}catch(e){if(e.name==='AbortError')return}

@@ -27,3 +27,9 @@
 #reminderTime {display:block;box-sizing:border-box;width:100%;max-width:100%;min-width:0;inline-size:100%;font-size:16px;}
 #reminderTime::-webkit-calendar-picker-indicator {margin-left:0;flex-shrink:0}
 @media(max-width:360px){#profile .card{padding:14px}#reminderTime{padding:10px 8px}}
+
+/* Seletor de horário compatível com Safari/iPhone: sem overflow nativo */
+.reminder-clock{width:100%;min-width:0;max-width:100%;display:flex;align-items:center;justify-content:center;gap:4px;padding:12px 10px;border:1px solid var(--line);border-radius:12px;background:#fff;margin:8px 0;overflow:hidden}
+.reminder-clock select{appearance:none;-webkit-appearance:none;min-width:0;width:72px;max-width:35%;border:0;background:transparent;color:#121819;font-size:22px;font-weight:600;text-align:center;text-align-last:center;padding:8px 2px;outline-offset:2px}
+.reminder-clock span{font-size:22px;font-weight:600;flex:none}
+@media(max-width:360px){.reminder-clock select{width:60px;font-size:20px}}

@@ -33,3 +33,13 @@
 .reminder-clock select{appearance:none;-webkit-appearance:none;min-width:0;width:72px;max-width:35%;border:0;background:transparent;color:#121819;font-size:22px;font-weight:600;text-align:center;text-align-last:center;padding:8px 2px;outline-offset:2px}
 .reminder-clock span{font-size:22px;font-weight:600;flex:none}
 @media(max-width:360px){.reminder-clock select{width:60px;font-size:20px}}
+
+/* Seletor de horário: nativo, acessível e compatível com iOS/Safari */
+#profile .reminder-clock{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:100%;min-width:0;overflow:visible;padding:12px 16px;background:#f5f7f2;border:1px solid #e3e9dc;border-radius:22px;min-height:72px;margin:10px 0 16px}
+#profile .reminder-clock>svg{width:22px;height:22px;flex:0 0 22px;color:#536347}
+#profile .reminder-clock input[type=time]{display:block;box-sizing:border-box;width:145px;min-width:0;max-width:calc(100% - 40px);height:48px;min-height:48px;padding:6px 10px;border:1px solid #dfe6d6;border-radius:15px;background:#fff;color:#121819;font-family:inherit;font-size:21px;font-weight:750;line-height:normal;text-align:center;outline:none;appearance:auto;-webkit-appearance:auto;color-scheme:light}
+#profile .reminder-clock input[type=time]:focus{border-color:#92d62c;box-shadow:0 0 0 3px #b6f43c44}
+#profile .reminder-clock input[type=time]::-webkit-calendar-picker-indicator{opacity:1;width:18px;height:18px;margin:0 0 0 4px;cursor:pointer}
+#profile .reminder-clock input[type=time]::-webkit-datetime-edit{padding:0}
+#profile .reminder-clock input[type=time]::-webkit-date-and-time-value{text-align:center;min-height:1.3em}
+@media(max-width:360px){#profile .reminder-clock{padding:10px}#profile .reminder-clock input[type=time]{font-size:19px;width:138px}}

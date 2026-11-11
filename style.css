@@ -21,3 +21,9 @@
 .banner-carousel{position:relative;border-radius:24px;overflow:hidden;background:#17221b}.banner-carousel>a{display:block;aspect-ratio:2/1}.banner-carousel img{display:block;width:100%;height:100%;object-fit:cover}.banner-carousel .dots{position:absolute;bottom:11px;left:0;right:0;margin:0}.banner-carousel .dot{background:#ffffff99}.banner-carousel .dot.on{background:#b6f43c}
 .profile-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:19px}.profile-summary>div{background:#26312e;border-radius:13px;padding:12px 5px;display:grid;gap:5px}.profile-summary strong{font-size:17px}.profile-summary small{font-size:10px;color:#c7d1cc}
 .weekday-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0}.weekday-grid label{cursor:pointer}.weekday-grid input{position:absolute;opacity:0;pointer-events:none}.weekday-grid span{display:block;text-align:center;padding:10px 2px;border-radius:9px;background:#edf0e9;font-size:11px;font-weight:700}.weekday-grid input:checked+span{background:#b6f43c}.support-links{padding:6px 16px}.support-links button{display:flex;align-items:center;gap:12px;width:100%;background:transparent;border-bottom:1px solid #eef0eb;padding:16px 2px;text-align:left;font-weight:700;font-size:13px}.support-links button svg:first-child{width:20px;height:20px}.support-links button svg:last-child{margin-left:auto;width:16px;height:16px}.support-links .danger,.danger-button{color:#b83232}.danger-button{background:#ffebeb}.profilehero .pill{color:#142000}
+
+/* Correção de largura do seletor de horário em telas estreitas */
+#profile .card {min-width:0;max-width:100%;overflow:hidden}
+#reminderTime {display:block;box-sizing:border-box;width:100%;max-width:100%;min-width:0;inline-size:100%;font-size:16px;}
+#reminderTime::-webkit-calendar-picker-indicator {margin-left:0;flex-shrink:0}
+@media(max-width:360px){#profile .card{padding:14px}#reminderTime{padding:10px 8px}}

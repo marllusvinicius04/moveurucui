@@ -13,7 +13,7 @@ function focusUserLocation(){if(!navigator.geolocation||!map)return;navigator.ge
 function resetCurrentRoute(){points=[];distance=0;elapsed=0;lastAcceptedTime=0;voiceHalf=false;voiceNear=false;hasCentered=false;if(routeLine)routeLine.setLatLngs([]);if(marker&&map){map.removeLayer(marker);marker=null}updateLive();focusUserLocation()}
 function startRun(){if(running||starting)return;if(!navigator.geolocation){alert('Seu navegador não oferece geolocalização.');return}initMap();starting=true;resetCurrentRoute();$('startcontrols').classList.add('hide');$('countdown').classList.remove('hide');let count=5;$('countnumber').textContent=count;speakCountdown(count);countdownTimer=setInterval(()=>{count--;if(count>0){$('countnumber').textContent=count;speakCountdown(count);return}clearInterval(countdownTimer);countdownTimer=null;$('countnumber').textContent='VAI!';speakCountdown(0);setTimeout(()=>{$('countdown').classList.add('hide');starting=false;beginTracking()},450)},1000)}
 function beginTracking(){running=true;paused=false;updateActivityUI();$('activecontrols').classList.remove('hide');$('pausebtn').innerHTML='<i data-lucide="pause"></i> PAUSAR';lastTick=Date.now();timer=setInterval(()=>{const now=Date.now();if(!paused)elapsed+=(now-lastTick)/1000;lastTick=now;updateLive()},250);watchId=navigator.geolocation.watchPosition(onPosition,onGpsError,{enableHighAccuracy:true,maximumAge:0,timeout:15000});updateLive()}
-function togglePause(){paused=!paused;updateActivityUI();lastTick=Date.now();$('pausebtn').innerHTML=paused?'<i data-lucide="play"></i> RETOMAR':'<i data-lucide="pause"></i> PAUSAR'}function finishRun(){if(!running)return;clearInterval(timer);if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;running=false;paused=false;updateActivityUI();$('activecontrols').classList.add('hide');$('startcontrols').classList.remove('hide');let run={id:Date.now(),mode,km:distance,seconds:Math.round(elapsed),calories:estimatedCalories(distance,mode),date:new Date().toISOString(),locality:data.locality||'',route:points.map(p=>[p.lat,p.lng])};data.runs.unshift(run);save();render();showFinishSponsor(run)}function showResult(r){if(!r)return;openModal(`<div class="result-head"><span class="eyebrow">ATIVIDADE CONCLUÍDA</span><h2>${escapeHtml(r.mode)} • ${Number(r.km).toFixed(2).replace('.',',')} km</h2><p>${formatTime(r.seconds)} de duração • ${r.calories??estimatedCalories(r.km,r.mode)} kcal estimadas</p></div><div class="result-actions"><button class="bigbtn" onclick="openPhotoComposer(${r.id})"><i data-lucide="image"></i> Compartilhar conquista</button><button class="bigbtn dark" onclick="closeModal();showScreen('progress')"><i data-lucide="chart-no-axes-column-increasing"></i> Ver progresso completo</button></div>`);refreshIcons()}
+function togglePause(){paused=!paused;updateActivityUI();lastTick=Date.now();$('pausebtn').innerHTML=paused?'<i data-lucide="play"></i> RETOMAR':'<i data-lucide="pause"></i> PAUSAR'}function finishRun(){if(!running)return;clearInterval(timer);if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;running=false;paused=false;updateActivityUI();$('activecontrols').classList.add('hide');$('startcontrols').classList.remove('hide');let run={id:Date.now(),mode,km:distance,seconds:Math.round(elapsed),calories:estimatedCalories(distance,mode),date:new Date().toISOString(),locality:data.locality||'',route:points.map(p=>[p.lat,p.lng])};data.runs.unshift(run);save();render();showFinishSponsor(run);celebrateActivityFinish()}function showResult(r){if(!r)return;openModal(`<div class="result-head"><span class="eyebrow">ATIVIDADE CONCLUÍDA</span><h2>${escapeHtml(r.mode)} • ${Number(r.km).toFixed(2).replace('.',',')} km</h2><p>${formatTime(r.seconds)} de duração • ${r.calories??estimatedCalories(r.km,r.mode)} kcal estimadas</p></div><div class="result-actions"><button class="bigbtn" onclick="openPhotoComposer(${r.id})"><i data-lucide="image"></i> Compartilhar conquista</button><button class="bigbtn dark" onclick="closeModal();showScreen('progress')"><i data-lucide="chart-no-axes-column-increasing"></i> Ver progresso completo</button></div>`);refreshIcons()}
 function formatPace(r){return r.mode==='Ciclismo'?speedText(r.seconds,r.km):paceText(r.seconds,r.km)}function unitFor(r){return r.mode==='Ciclismo'?'':'/km'}
 
 // Desenha somente o percurso real registrado pelo GPS, sem simular trajetos.
@@ -158,3 +158,45 @@ function handleWearableHeartRate(event){const value=event.target.value;if(!value
 function handleWearableDisconnect(){wearableServer=null;wearableCharacteristic=null;wearableHeartRate=null;setWearableStatus('Dispositivo desconectado')}
 async function connectWearable(){if(!window.isSecureContext){setWearableStatus('Abra o aplicativo por HTTPS para usar Bluetooth.');return}if(!navigator.bluetooth){setWearableStatus('Bluetooth pelo navegador indisponível neste dispositivo.');return}try{setWearableStatus('Escolha um sensor compatível na lista...');const device=await navigator.bluetooth.requestDevice({filters:[{services:['heart_rate']}],optionalServices:['heart_rate']});if(wearableDevice&&wearableDevice!==device)disconnectWearable();wearableDevice=device;device.addEventListener('gattserverdisconnected',handleWearableDisconnect);setWearableStatus('Conectando a '+(device.name||'sensor')+'...');wearableServer=await device.gatt.connect();const service=await wearableServer.getPrimaryService('heart_rate');wearableCharacteristic=await service.getCharacteristic('heart_rate_measurement');await wearableCharacteristic.startNotifications();wearableCharacteristic.addEventListener('characteristicvaluechanged',handleWearableHeartRate);setWearableStatus('Conectado: '+(device.name||'sensor')+' • aguardando batimentos')}catch(error){const msg=error?.name==='NotFoundError'?'Nenhum dispositivo selecionado.':error?.name==='NotSupportedError'?'Este relógio não disponibiliza o serviço de frequência cardíaca compatível.':'Não foi possível conectar: '+(error?.message||'erro desconhecido');setWearableStatus(msg)}}
 function disconnectWearable(){try{if(wearableCharacteristic)wearableCharacteristic.removeEventListener('characteristicvaluechanged',handleWearableHeartRate);if(wearableDevice?.gatt?.connected)wearableDevice.gatt.disconnect()}catch(e){}wearableDevice=null;wearableServer=null;wearableCharacteristic=null;wearableHeartRate=null;setWearableStatus('Nenhum sensor conectado')}
+
+
+// Celebração visual e sonora ao concluir uma atividade.
+let finishCelebrationTimer=null;
+function celebrateActivityFinish(){
+  document.querySelector('.activity-confetti-layer')?.remove();
+  const layer=document.createElement('div');layer.className='activity-confetti-layer';
+  layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);
+  const palette=['#b9ff35','#ffffff','#ffd447','#42d5ff','#fa79a8'];
+  for(let i=0;i<100;i++){
+    const bit=document.createElement('span');bit.className='activity-confetti';
+    bit.style.setProperty('--x',`${Math.random()*100}vw`);
+    bit.style.setProperty('--drift',`${(Math.random()-.5)*180}px`);
+    bit.style.setProperty('--delay',`${Math.random()*.65}s`);
+    bit.style.setProperty('--duration',`${2.3+Math.random()*1.7}s`);
+    bit.style.setProperty('--color',palette[i%palette.length]);
+    bit.style.setProperty('--rotation',`${Math.random()*1080}deg`);
+    layer.appendChild(bit);
+  }
+  clearTimeout(finishCelebrationTimer);
+  finishCelebrationTimer=setTimeout(()=>layer.remove(),4800);
+  playActivityFinishSound();
+}
+function playActivityFinishSound(){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx)return;
+    const ctx=new AudioCtx();
+    if(ctx.state==='suspended')ctx.resume().catch(()=>{});
+    const start=ctx.currentTime+.025;
+    [659.25,783.99,987.77,1318.51].forEach((frequency,i)=>{
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type='sine';osc.frequency.setValueAtTime(frequency,start+i*.115);
+      gain.gain.setValueAtTime(.0001,start+i*.115);
+      gain.gain.exponentialRampToValueAtTime(.095,start+i*.115+.015);
+      gain.gain.exponentialRampToValueAtTime(.0001,start+i*.115+.34);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(start+i*.115);osc.stop(start+i*.115+.36);
+    });
+    setTimeout(()=>ctx.close().catch(()=>{}),1800);
+  }catch(e){console.debug('Som de conclusão indisponível',e)}
+}

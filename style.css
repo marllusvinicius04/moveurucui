@@ -71,3 +71,10 @@
 
 /* V15 — sensores Bluetooth */
 .wearable-card .row{display:flex;align-items:center}.wearable-card strong{display:inline-flex;align-items:center;gap:7px}.wearable-pulse{white-space:nowrap;font-size:18px;font-weight:800}.wearable-pulse svg{width:19px;height:19px;vertical-align:middle;color:#7dbd18}.wearable-pulse small{font-size:11px;color:#92999b}.wearable-actions{gap:8px;flex-wrap:wrap}.wearable-actions .bigbtn{flex:1;min-width:170px;margin:0}.wearable-actions .ghost{width:auto;margin:0;padding:12px}.wearable-card .small{line-height:1.5}
+
+/* Confetes da atividade concluída: não bloqueiam toques no card. */
+.activity-confetti-layer{position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden}
+.activity-confetti{position:absolute;left:var(--x);top:-22px;width:9px;height:15px;background:var(--color);border-radius:2px;opacity:0;animation:activity-confetti-fall var(--duration) var(--delay) ease-in forwards;will-change:transform,opacity}
+.activity-confetti:nth-child(3n){width:6px;height:6px;border-radius:50%}
+@keyframes activity-confetti-fall{0%{transform:translate3d(0,-25px,0) rotate(0);opacity:0}8%{opacity:1}85%{opacity:1}100%{transform:translate3d(var(--drift),105vh,0) rotate(var(--rotation));opacity:0}}
+@media(prefers-reduced-motion:reduce){.activity-confetti{animation-duration:.8s;animation-delay:0s}}

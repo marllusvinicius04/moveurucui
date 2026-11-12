@@ -1,5 +1,5 @@
 // Cole aqui a URL /exec da implantação do Apps Script.
-window.MOVE_API_URL='COLE_AQUI_URL_DO_APPS_SCRIPT_EXEC';
+window.MOVE_API_URL='https://script.google.com/macros/s/AKfycbwgWGctTAD_PDPlW2zKD6hbZ4uTu9h4gPvuxMGWrd_XNPfc2IF4gr33twhIXkvSowIP0w/exec';
 window.moveApi=async function(payload){
  const url=window.MOVE_API_URL;
  if(!url||url.includes('COLE_AQUI'))throw Error('Configure MOVE_API_URL em connect.js');

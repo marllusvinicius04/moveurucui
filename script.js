@@ -1,6 +1,6 @@
 /* API CENTRAL MOVETI — Apps Script */
 window.MOVE_CONFIG = {
-  apiUrl: "https://script.google.com/macros/s/AKfycbwj-XzcfOVcVNDZ962FCZAzTvr54rBj2snAsJlSG_mdWaoqGKXe-RvpF0I2Qc6fUtVW7w/exec" // URL do Apps Script implantado como aplicativo da Web
+  apiUrl: "https://script.google.com/macros/s/AKfycbxfMhDkHJO99eXFagufJ9rY75bzwZUmSIZPUSXvvBX-EM3EIFP32wJI5h6LQeFK4ZTxwQ/exec" // URL do Apps Script implantado como aplicativo da Web
 };
 
 /* APLICATIVO ORIGINAL */

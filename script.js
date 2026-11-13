@@ -203,7 +203,7 @@ function playActivityFinishSound(){
 
 
 /* CONFIGURAÇÃO: cole a URL /exec da implantação do Apps Script abaixo */
-const APPS_SCRIPT_URL='COLE_AQUI_URL_DO_APPS_SCRIPT_EXEC';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbyWLuseLpXrGLHMuQm33hjgmWG5yzNwZufSOeCMiN8_em6vTMBzicUsxe_MepB7IZc8Kg/exec';
 const SESSION_KEY='uem_session_v1';
 let sessionToken=localStorage.getItem(SESSION_KEY)||'';
 function api(payload){if(!APPS_SCRIPT_URL.startsWith('https://'))return Promise.reject(Error('Configure a URL do Apps Script no script.js'));return fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow'}).then(r=>r.json()).then(r=>{if(!r.ok)throw Error(r.error||'Erro na solicitação');return r})}

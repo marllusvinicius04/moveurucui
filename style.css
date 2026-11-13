@@ -94,3 +94,6 @@
 
 /* Estado vazio de eventos */
 .events-empty{background:#fff;border:1px solid #e5ebdf;border-radius:24px;padding:27px 22px;text-align:center;margin:12px 0 20px}.events-empty-icon{margin:0 auto 15px;width:66px;height:66px;display:grid;place-items:center;border-radius:21px;background:#ecf9d9;color:#487b11}.events-empty-icon svg{width:31px;height:31px}.events-empty h3{font-size:20px;margin-bottom:9px}.events-empty p{font-size:13px;line-height:1.55;color:#67736b;margin:9px 0}.events-empty strong{display:block;color:#326d13;margin-top:18px}.events-empty .bigbtn{margin-top:17px}.reminder-spinner{display:inline-block;width:15px;height:15px;border:2px solid #24401966;border-top-color:#244019;border-radius:50%;vertical-align:-3px;animation:reminderSpin .65s linear infinite}@keyframes reminderSpin{to{transform:rotate(360deg)}}
+
+/* Ranking comunitário real */
+.ranking-empty{padding:22px 12px;text-align:center;color:#607064;font-size:13px;line-height:1.6}.ranking-empty strong{display:block;color:#15211b;font-size:15px}.ranking-empty p{margin-top:6px}.ranking-city{font-size:12px;font-weight:800;color:#557339;margin-bottom:14px}.community-row{padding:12px 0;border-bottom:1px solid #edf0e9}.community-row:last-child{border:0}.podium-step{font-size:13px;white-space:nowrap}.podium-place small{font-size:11px}

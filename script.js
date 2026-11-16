@@ -122,8 +122,9 @@ function renderLeaderboards(){if(!leaderboardAds.length){document.querySelectorA
 renderLeaderboards();setInterval(()=>{boardIndex=(boardIndex+1)%leaderboardAds.length;renderLeaderboards()},5500);
 const advertisingWhatsApp='5589994484966'; // Número comercial editável
 function requestAdvertising(){window.open('https://wa.me/'+advertisingWhatsApp+'?text='+encodeURIComponent('Olá! Quero anunciar no Uruçuí em Movimento.'),'_blank','noopener,noreferrer')}
+const finishAds=[];let finishSponsorIndex=0;
 function showFinishSponsor(r){
- const ad=leaderboardAds[0]||{image:''};openModal(`<div class="finish-head"><i data-lucide="check-circle-2"></i><h2>Atividade finalizada!</h2><p>Você percorreu <strong>${r.km.toFixed(2).replace('.',',')} km</strong>. Parabéns!</p></div><p class="small" style="text-align:center;margin:18px 0 8px">OFERECIMENTO</p><div class="finish-sponsor"><img src="${ad.image}" alt="Patrocinador da atividade"></div><button class="bigbtn" onclick="showResult(data.runs.find(x=>x.id===${r.id}))">Continuar <i data-lucide="arrow-right"></i></button><button class="ghost" onclick="closeModal()">Fechar</button>`)
+ const patrocinadores=finishAds.filter(x=>x.image);const ad=patrocinadores.length?patrocinadores[finishSponsorIndex++%patrocinadores.length]:null;openModal(`<div class="finish-head"><i data-lucide="check-circle-2"></i><h2>Atividade finalizada!</h2><p>Você percorreu <strong>${r.km.toFixed(2).replace('.',',')} km</strong>. Parabéns!</p></div>${ad?`<p class="small" style="text-align:center;margin:18px 0 8px">OFERECIMENTO</p><div class="finish-sponsor">${ad.url?`<a href="${escapeHtml(ad.url)}" target="_blank" rel="noopener noreferrer">`:``}<img src="${escapeHtml(ad.image)}" alt="Patrocinador da atividade">${ad.url?`</a>`:``}</div>`:``}<button class="bigbtn" onclick="showResult(data.runs.find(x=>x.id===${r.id}))">Continuar <i data-lucide="arrow-right"></i></button><button class="ghost" onclick="closeModal()">Fechar</button>`)
 }
 function birthdayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function checkBirthday(){if(!data.birth)return;const parts=data.birth.split('-').map(Number),now=new Date();if(parts[1]!==now.getMonth()+1||parts[2]!==now.getDate())return;if(localStorage.getItem('uem_birthday_seen')===birthdayKey())return;const overlay=$('birthdayOverlay');if(!overlay)return;$('birthdayMessage').textContent=`${(data.name||'Corredor').split(' ')[0]}, que seu novo ciclo seja cheio de saúde, energia e quilômetros de conquistas!`;$('birthdayConfetti').innerHTML=Array.from({length:60},(_,i)=>`<span style="left:${Math.random()*100}%;animation-delay:${Math.random()*2}s;background:${['#b6f43c','#fff','#77a5fa','#ffd96a'][i%4]}"></span>`).join('');overlay.classList.remove('hide');refreshIcons()}
@@ -203,7 +204,7 @@ function playActivityFinishSound(){
 
 
 /* CONFIGURAÇÃO: cole a URL /exec da implantação do Apps Script abaixo */
-const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwgqb43YaWvSm3a5wMNfnijXR7v6S3gb_TgJZa6s6cenv1LAkAVxicFD9vcAKbiQDZfaw/exec';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxK9x8t5ZTHp5Rc0DGZIO5u0gqVe2wnhq2AuLoMOvoIUGk9WFK7ry1oaSUpK89vPCt3pQ/exec';
 const SESSION_KEY='uem_session_v1';
 const ACCOUNT_CACHE_KEY='uem_account_cache_v1';
 let sessionToken=localStorage.getItem(SESSION_KEY)||'';
@@ -250,10 +251,13 @@ async function refreshCityContent(){
   const c=await publicContent(cidade,uf);
   if(!c)return;
   const banners=Array.isArray(c.banners)?c.banners:[];
-  const inicio=banners.filter(x=>x.imagem&&x.posicao!=='ranking').map(x=>({image:x.imagem,url:x.link||''}));
-  const comunidade=banners.filter(x=>x.imagem&&x.posicao==='ranking').map(x=>({image:x.imagem,url:x.link||''}));
+  const possuiPosicao=(x,p)=>String(x.posicao||'home').split(',').map(s=>s.trim().toLowerCase()).includes(p);
+  const inicio=banners.filter(x=>x.imagem&&possuiPosicao(x,'home')).map(x=>({image:x.imagem,url:x.link||''}));
+  const comunidade=banners.filter(x=>x.imagem&&possuiPosicao(x,'ranking')).map(x=>({image:x.imagem,url:x.link||''}));
+  const conclusao=banners.filter(x=>x.imagem&&possuiPosicao(x,'finish')).map(x=>({image:x.imagem,url:x.link||''}));
   ads.splice(0,ads.length,...inicio);adindex=0;renderAd();
   leaderboardAds.splice(0,leaderboardAds.length,...comunidade);boardIndex=0;renderLeaderboards();
+  finishAds.splice(0,finishAds.length,...conclusao);
   events.splice(0,events.length,...(Array.isArray(c.eventos)?c.eventos:[]).map(x=>({...x,emoji:'',image:x.image||''})));
   render();
  }catch(e){console.warn('Falha ao atualizar banners e eventos:',e.message)}

@@ -1,3 +1,4 @@
+let profilePhotoPreviewUrl='';
 
 const $=id=>document.getElementById(id);const KEY='moveplus_data_v1';let data;try{data=JSON.parse(localStorage.getItem(KEY))||{name:'Corredor de Uruçuí',runs:[]}}catch{data={name:'Corredor de Uruçuí',runs:[]}};const save=()=>localStorage.setItem(KEY,JSON.stringify(data));// Substitua as imagens e URLs por anúncios reais (imagens em formato 1200×600).
 const ads=[
@@ -204,7 +205,7 @@ function playActivityFinishSound(){
 
 
 /* CONFIGURAÇÃO: cole a URL /exec da implantação do Apps Script abaixo */
-const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbx3n2kAfVuEnHjs_4Vh0UIaIS3KEk7GBuCn4wsZOZcwhle1TBQFdB9KxivK6osrkW6UrA/exec';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxK9x8t5ZTHp5Rc0DGZIO5u0gqVe2wnhq2AuLoMOvoIUGk9WFK7ry1oaSUpK89vPCt3pQ/exec';
 const SESSION_KEY='uem_session_v1';
 const ACCOUNT_CACHE_KEY='uem_account_cache_v1';
 let sessionToken=localStorage.getItem(SESSION_KEY)||'';
@@ -292,7 +293,7 @@ try { render(); updateLocality(); refreshCityContent(); refreshIcons(); } catch 
 
 // Foto de perfil: upload para o Drive via conta autenticada; imagem persistente na planilha.
 function chooseProfilePhoto(){const el=document.getElementById('profilePhotoInput');if(el)el.click()}
-let profilePhotoPreviewUrl='';
+
 function photoAvatarHtml(url,alt='Foto do perfil'){return url&&(/^(https:\/\/|blob:)/.test(url))?'<img src="'+escapeHtml(url)+'" alt="'+escapeHtml(alt)+'" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':'<i data-lucide="person-standing"></i>'}
 function renderProfilePhoto(){const photo=profilePhotoPreviewUrl||String(data.profilePhoto||'');const avatar=document.getElementById('profilePhotoAvatar');if(avatar)avatar.innerHTML=photoAvatarHtml(photo,'Sua foto de perfil');const home=document.querySelector('#home .top .avatar');if(home)home.innerHTML=photoAvatarHtml(photo,'Foto do perfil');document.querySelectorAll('.community-row[data-me="true"] .ranking-user-avatar, .podium-place[data-me="true"] .podium-avatar').forEach(el=>el.innerHTML=photoAvatarHtml(photo));if(window.lucide)lucide.createIcons()}
 async function uploadProfilePhoto(input){const file=input.files&&input.files[0];if(!file)return;let preview='';try{if(!sessionToken)throw Error('Entre na sua conta para salvar a foto.');if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Escolha uma imagem JPG, PNG ou WEBP.');if(file.size>2*1024*1024)throw Error('A foto deve ter no máximo 2 MB.');preview=URL.createObjectURL(file);profilePhotoPreviewUrl=preview;renderProfilePhoto();const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=()=>reject(Error('Não foi possível ler a foto.'));reader.readAsDataURL(file)});const result=await api({action:'uploadProfilePhoto',token:sessionToken,mimeType:file.type,base64});data.profilePhoto=result.foto;save();let cached={};try{cached=JSON.parse(localStorage.getItem(ACCOUNT_CACHE_KEY)||'{}')}catch(e){}cached.foto=result.foto;localStorage.setItem(ACCOUNT_CACHE_KEY,JSON.stringify(cached));profilePhotoPreviewUrl='';renderProfilePhoto();if(communityRanking&&Array.isArray(communityRanking)){communityRanking.forEach(u=>{if(u.eu)u.foto=result.foto});renderRanking()} }catch(e){profilePhotoPreviewUrl='';renderProfilePhoto();alert('Não foi possível salvar a foto: '+e.message)}finally{input.value='';if(preview)setTimeout(()=>URL.revokeObjectURL(preview),1000)}}

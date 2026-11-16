@@ -296,4 +296,62 @@ function chooseProfilePhoto(){const el=document.getElementById('profilePhotoInpu
 
 function photoAvatarHtml(url,alt='Foto do perfil'){return url&&(/^(https:\/\/|blob:)/.test(url))?'<img src="'+escapeHtml(url)+'" alt="'+escapeHtml(alt)+'" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':'<i data-lucide="person-standing"></i>'}
 function renderProfilePhoto(){const photo=profilePhotoPreviewUrl||String(data.profilePhoto||'');const avatar=document.getElementById('profilePhotoAvatar');if(avatar)avatar.innerHTML=photoAvatarHtml(photo,'Sua foto de perfil');const home=document.querySelector('#home .top .avatar');if(home)home.innerHTML=photoAvatarHtml(photo,'Foto do perfil');document.querySelectorAll('.community-row[data-me="true"] .ranking-user-avatar, .podium-place[data-me="true"] .podium-avatar').forEach(el=>el.innerHTML=photoAvatarHtml(photo));if(window.lucide)lucide.createIcons()}
-async function uploadProfilePhoto(input){const file=input.files&&input.files[0];if(!file)return;let preview='';try{if(!sessionToken)throw Error('Entre na sua conta para salvar a foto.');if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Escolha uma imagem JPG, PNG ou WEBP.');if(file.size>2*1024*1024)throw Error('A foto deve ter no máximo 2 MB.');preview=URL.createObjectURL(file);profilePhotoPreviewUrl=preview;renderProfilePhoto();const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=()=>reject(Error('Não foi possível ler a foto.'));reader.readAsDataURL(file)});const result=await api({action:'uploadProfilePhoto',token:sessionToken,mimeType:file.type,base64});data.profilePhoto=result.foto;save();let cached={};try{cached=JSON.parse(localStorage.getItem(ACCOUNT_CACHE_KEY)||'{}')}catch(e){}cached.foto=result.foto;localStorage.setItem(ACCOUNT_CACHE_KEY,JSON.stringify(cached));profilePhotoPreviewUrl='';renderProfilePhoto();if(communityRanking&&Array.isArray(communityRanking)){communityRanking.forEach(u=>{if(u.eu)u.foto=result.foto});renderRanking()} }catch(e){profilePhotoPreviewUrl='';renderProfilePhoto();alert('Não foi possível salvar a foto: '+e.message)}finally{input.value='';if(preview)setTimeout(()=>URL.revokeObjectURL(preview),1000)}}
+// Reduz fotos grandes de celulares antes de enviá-las ao Apps Script.
+// Safari/iPhone pode entregar HEIC, JPEG de muitos MB ou PNG com metadados.
+async function prepareMobileProfilePhoto(file){
+ const source=URL.createObjectURL(file);
+ try{
+  let image,dispose=()=>{};
+  if(typeof createImageBitmap==='function'){
+   try{image=await createImageBitmap(file,{imageOrientation:'from-image'});dispose=()=>image.close?.()}catch(e){}
+  }
+  if(!image){image=await new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Este formato não pôde ser aberto pelo navegador. No iPhone, escolha uma foto JPG ou PNG, ou exporte a imagem como JPEG.'));img.src=source})}
+  try{
+   const iw=image.width||image.naturalWidth,ih=image.height||image.naturalHeight;
+   if(!iw||!ih)throw Error('A foto não possui dimensões válidas.');
+   const maxSide=900,scale=Math.min(1,maxSide/Math.max(iw,ih));
+   const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(iw*scale));canvas.height=Math.max(1,Math.round(ih*scale));
+   const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw Error('Não foi possível preparar a foto neste navegador.');
+   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,canvas.width,canvas.height);
+   let blob=null;
+   for(const quality of [.82,.7,.56,.42]){
+    blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+    if(blob&&blob.size<=850000)break;
+   }
+   if(!blob||!blob.size)throw Error('Não foi possível converter a foto em JPG.');
+   if(blob.size>2*1024*1024)throw Error('Foto ainda muito grande após a compressão.');
+   return blob;
+  }finally{dispose()}
+ }finally{URL.revokeObjectURL(source)}
+}
+function profilePhotoStatus(message){
+ let el=document.getElementById('profilePhotoUploadStatus');
+ if(!el){const anchor=document.querySelector('#profile .profile-photo-hint');if(!anchor)return;el=document.createElement('p');el.id='profilePhotoUploadStatus';el.setAttribute('role','status');el.style.cssText='font-size:12px;line-height:1.4;margin:8px auto;max-width:290px;color:#b6f43c';anchor.insertAdjacentElement('afterend',el)}
+ el.textContent=message;
+}
+async function uploadProfilePhoto(input){
+ const file=input.files&&input.files[0];if(!file)return;
+ const oldPhoto=data.profilePhoto||'';
+ let preview='';
+ try{
+  if(!sessionToken)throw Error('Entre na sua conta para salvar a foto.');
+  if(file.size>35*1024*1024)throw Error('A imagem é muito grande. Escolha uma foto de até 35 MB.');
+  preview=URL.createObjectURL(file);profilePhotoPreviewUrl=preview;renderProfilePhoto();
+  profilePhotoStatus('Preparando foto para envio...');
+  const jpeg=await prepareMobileProfilePhoto(file);
+  const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=()=>reject(Error('Não foi possível ler a foto preparada.'));reader.readAsDataURL(jpeg)});
+  profilePhotoStatus('Salvando sua foto na conta...');
+  const result=await api({action:'uploadProfilePhoto',token:sessionToken,mimeType:'image/jpeg',base64});
+  if(!result.foto)throw Error('O servidor não retornou o endereço da foto.');
+  data.profilePhoto=result.foto;save();
+  let cached={};try{cached=JSON.parse(localStorage.getItem(ACCOUNT_CACHE_KEY)||'{}')}catch(e){}
+  cached.foto=result.foto;try{localStorage.setItem(ACCOUNT_CACHE_KEY,JSON.stringify(cached))}catch(e){console.warn('Cache de foto:',e)}
+  profilePhotoPreviewUrl='';renderProfilePhoto();
+  if(Array.isArray(communityRanking)){communityRanking.forEach(u=>{if(u.eu)u.foto=result.foto});renderRanking()}
+  profilePhotoStatus('Foto salva com sucesso!');
+ }catch(e){
+  profilePhotoPreviewUrl='';data.profilePhoto=oldPhoto;renderProfilePhoto();
+  profilePhotoStatus('Falha ao salvar: '+e.message);
+  alert('Não foi possível salvar a foto: '+e.message);
+ }finally{input.value='';if(preview)setTimeout(()=>URL.revokeObjectURL(preview),1500)}
+}

@@ -103,3 +103,6 @@
 .floating-start{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom, 0px));z-index:900}
 
 .icon-fallback{display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;min-width:1em}
+
+/* Foto do perfil: acréscimo sem alterar demais elementos */
+.profile-photo-button{display:block;position:relative;width:86px;height:86px;margin:0 auto 10px;padding:0;border:0;background:transparent;border-radius:50%;cursor:pointer}.profilehero .profile-photo-button .avatar{width:86px;height:86px;margin:0;overflow:hidden;border:3px solid #b6f43c;background:#dce9ca}.profile-photo-button img{width:100%;height:100%;object-fit:cover;display:block}.profile-photo-edit{position:absolute;bottom:-2px;right:-3px;width:30px;height:30px;border-radius:50%;background:#b6f43c;color:#101718;border:3px solid #101718;display:grid;place-items:center}.profile-photo-edit svg{width:15px;height:15px}.profile-photo-hint{font-size:11px!important;margin:0 0 9px!important;color:#c7d1cc!important}

@@ -101,3 +101,5 @@
 /* Corrige botão flutuante no Safari: animação transformada da tela altera position:fixed */
 .screen{animation:none!important}
 .floating-start{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom, 0px));z-index:900}
+
+.icon-fallback{display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;min-width:1em}

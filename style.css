@@ -97,3 +97,7 @@
 
 /* Ranking comunitário real */
 .ranking-empty{padding:22px 12px;text-align:center;color:#607064;font-size:13px;line-height:1.6}.ranking-empty strong{display:block;color:#15211b;font-size:15px}.ranking-empty p{margin-top:6px}.ranking-city{font-size:12px;font-weight:800;color:#557339;margin-bottom:14px}.community-row{padding:12px 0;border-bottom:1px solid #edf0e9}.community-row:last-child{border:0}.podium-step{font-size:13px;white-space:nowrap}.podium-place small{font-size:11px}
+
+/* Corrige botão flutuante no Safari: animação transformada da tela altera position:fixed */
+.screen{animation:none!important}
+.floating-start{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom, 0px));z-index:900}

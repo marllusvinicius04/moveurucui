@@ -710,3 +710,8 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 #authOverlay .auth-loading-user{flex:none!important;position:relative!important;top:auto!important;transform:none!important;order:0!important;margin:0 auto 8px!important}
 #authOverlay .auth-loading strong{order:1!important}
 #authOverlay .auth-loading small{order:2!important}
+
+#home .footertext{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px;color:#161616;font-size:11px}
+#home .footertext strong{font-family:Outfit,sans-serif;font-weight:900;letter-spacing:1px}
+#home .footertext .footer-made{font-weight:600}
+.support-links button .fa-instagram{font-size:21px;width:20px;flex:none;text-align:center}

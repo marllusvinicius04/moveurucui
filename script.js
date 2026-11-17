@@ -513,3 +513,16 @@ document.addEventListener('visibilitychange',()=>{if(running){syncActivityClock(
 window.addEventListener('pagehide',()=>{if(running){syncActivityClock();persistActivityClock()}});
 
 window.addEventListener('DOMContentLoaded',()=>{try{const raw=localStorage.getItem('corresul_active_clock');if(!raw)return;const previous=JSON.parse(raw);if(!previous||!previous.savedAt)return;localStorage.removeItem('corresul_active_clock');if(Date.now()-previous.savedAt>24*3600000)return;setTimeout(()=>{if(running)return;const msg='Uma atividade anterior foi interrompida ao fechar o aplicativo. O GPS não pode ser recuperado automaticamente. Inicie uma nova atividade para registrar a distância com segurança.';if(typeof openModal==='function')openModal('<h2>Atividade interrompida</h2><p class="eventdetail">'+msg+'</p><button class="bigbtn" onclick="closeModal()">Entendi</button>')},1400)}catch(e){}});
+
+// Alternância acessível de visibilidade da senha, sem alterar seu valor.
+function togglePasswordVisibility(button){
+ const field=button.closest('.auth-password-field');
+ const input=field&&field.querySelector('input');
+ if(!input)return;
+ const visible=input.type==='password';
+ input.type=visible?'text':'password';
+ button.setAttribute('aria-label',visible?'Ocultar senha':'Mostrar senha');
+ button.setAttribute('aria-pressed',String(visible));
+ const icon=button.querySelector('i');
+ if(icon)icon.className=visible?'fa fa-eye-slash':'fa fa-eye';
+}

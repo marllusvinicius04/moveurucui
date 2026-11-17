@@ -181,3 +181,13 @@
 .motivation-mark svg{width:32px;height:32px}
 .motivation-close{position:absolute;top:-8px;right:0;border:0;background:transparent;color:inherit;padding:9px;cursor:pointer}
 .motivation-close svg{width:23px;height:23px}
+
+/* Ajustes de inclusão, autenticação e afastamento do menu inferior */
+.auth-field-label{font-size:13px;font-weight:700;color:#e3f0dc;margin-bottom:-7px}
+.auth-password-field{position:relative;display:block;width:100%;min-width:0}
+.auth-box .auth-password-field input{width:100%;padding-right:58px}
+.auth-box .auth-password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:43px;height:43px;margin:0;padding:0;border-radius:12px;background:transparent;color:#d5f9a1;display:grid;place-items:center;z-index:2;font-size:18px}
+.auth-box .auth-password-toggle:active{transform:translateY(-50%) scale(.96)}
+.auth-box .auth-password-toggle:focus-visible{outline:2px solid #b6f43c;outline-offset:2px}
+.active-mini{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+.welcome-icon .fa{font-size:64px;color:#b6f43c}

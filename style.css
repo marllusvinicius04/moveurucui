@@ -479,3 +479,9 @@ body{background:#f1f1f1}
 .active-mini>svg:first-child{color:#d99a00}
 .modal{background:#161616a8}
 @media(min-width:500px){body{background:#f0f0f0}}
+
+/* Ajuste solicitado: somente menu inferior preto; topo permanece branco. */
+.nav{background:#111111f7;border-top:1px solid #252525;box-shadow:0 -8px 28px #11111122}
+.nav button{color:#d1d1d1}
+.nav button.on{color:#FFBA00}
+.nav button.on span{background:#FFBA00;color:#111111}

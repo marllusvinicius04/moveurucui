@@ -508,3 +508,29 @@ body{background:#f1f1f1}
 #home .flash-tile:nth-child(2) strong .fa-bolt{color:#d28d00;font-size:10px}
 .flash-ad-label{position:absolute;bottom:5px;left:4px;right:4px;display:flex;align-items:center;justify-content:center;gap:3px;background:#FFBA00;color:#111;border-radius:5px;padding:3px 1px;font-size:9px;font-weight:900;letter-spacing:.5px;z-index:3}
 @media(max-width:360px){.floating-start{width:66px;height:66px;bottom:calc(111px + env(safe-area-inset-bottom,0px))}.nav button{font-size:9px}}
+
+/* Navegação inferior exclusiva da tela Início. Outras telas usam o botão de retorno. */
+.app .nav{display:none!important}
+.app:has(#home.active) .nav{display:flex!important}
+.app:has(#home.active) .floating-start{bottom:calc(115px + env(safe-area-inset-bottom,0px))}
+.app:not(:has(#home.active)) .active-mini{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+
+/* CorreSul: autenticação editorial com colagem esportiva. Apenas apresentação. */
+.auth-overlay{background:#f5f5f2!important;padding:12px 14px!important;align-items:center!important}
+.auth-overlay:before{background:radial-gradient(circle at 15% 15%,#FFBA002a,transparent 48%)!important}
+.auth-box{width:min(100%,430px)!important;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;background:#111!important;color:#fff!important;border:0!important;border-radius:27px!important;padding:12px 20px 24px!important;box-shadow:0 24px 65px #0003!important}
+.auth-box:before{display:none!important}
+.auth-showcase{height:clamp(195px,30dvh,285px);border-radius:19px;overflow:hidden;position:relative;background:#191919;margin-bottom:21px;isolation:isolate}
+.auth-collage{display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:1fr 1fr;gap:5px;height:100%;transform:scale(1.02)}
+.auth-shot{min-height:0;overflow:hidden;position:relative;background:#3a3a3a}.auth-shot-run{grid-row:1/3}.auth-shot img{width:100%;height:100%;object-fit:cover;filter:grayscale(.7) contrast(1.12);display:block}.auth-shot-run img{object-position:48% center}.auth-shot-bike img{object-position:center 60%}
+.auth-showcase:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#1111 10%,#1118 50%,#080808ef 100%),linear-gradient(110deg,#FFBA0025,transparent 65%);pointer-events:none;z-index:1}
+.auth-showcase-copy{position:absolute;left:17px;right:12px;bottom:18px;z-index:2;display:grid;gap:6px;color:#fff}.auth-showcase-copy>span{font-size:9px;letter-spacing:1.5px;color:#FFBA00;font-weight:900}.auth-showcase-copy strong{font:900 clamp(26px,7vw,35px)/.97 Outfit,sans-serif;letter-spacing:-1px}.auth-showcase-copy small{font-size:9px;letter-spacing:1.2px;font-weight:800}.auth-showcase-copy small b{color:#FFBA00}
+.auth-box .auth-brand{color:#fff!important;margin-bottom:6px!important;font-size:20px!important}.auth-box .auth-brand strong{color:#FFBA00!important}.auth-box .auth-brand-icon{background:#FFBA00!important;color:#111!important}.auth-box .auth-kicker{color:#FFBA00!important;margin-bottom:17px}.auth-box h2{color:#fff!important;font-size:26px!important}.auth-box p,.auth-box .auth-note{color:#bdbdbd!important}.auth-box input,.auth-box select{background:#242424!important;color:#fff!important;border:1px solid #414141!important}.auth-box input::placeholder{color:#a7a7a7!important}.auth-box button:not(.link):not(.auth-password-toggle):not(.secondary){background:#FFBA00!important;color:#111!important}.auth-box button.secondary{background:#303030!important;color:#fff!important;border:1px solid #505050!important}.auth-box button.link{color:#FFBA00!important}.auth-box .auth-password-toggle{color:#FFBA00!important}.auth-box .auth-field-label{color:#fff!important}
+@media(max-height:700px){.auth-showcase{height:175px}.auth-box{padding-bottom:16px!important}.auth-box h2{font-size:23px!important}}
+/* Ações afastadas do mapa e do painel de métricas. */
+#track .track-actions{margin-top:30px!important;padding-top:8px!important;margin-bottom:20px!important}
+#track .track-actions #activecontrols .row{gap:12px!important}
+#track .track-actions #activecontrols .bigbtn{margin-top:0!important}
+/* A espera só bloqueia os botões de conclusão do treino. */
+.finish-wait-label{text-align:center;color:#6c6c6c;font-size:12px;font-weight:700;margin:15px 0 4px}.finish-wait-label i{color:#b78300;margin-right:5px}
+#finishContinueBtn:disabled,#finishCloseBtn:disabled{opacity:.45!important;cursor:not-allowed!important;filter:grayscale(.5)}

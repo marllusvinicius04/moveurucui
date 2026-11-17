@@ -158,22 +158,29 @@ const finishAds=[];let finishSponsorIndex=0;
 // Antes de mostrar o oferecimento, consulta os banners atuais do painel quando necessario.
 // A publicidade e sempre opcional: sem campanha ativa, o atleta continua normalmente.
 async function showFinishSponsorWithRefresh(run){
+ // Atividades de desafios exibem somente o patrocinador cadastrado no proprio desafio.
+ // Atividades livres preservam a publicidade geral da posicao finish.
+ if(run.challengeId){
+  let desafio=events.find(e=>String(e.id)===String(run.challengeId));
+  if(!desafio){
+   const cidade=String(data.localityCity||'').trim(),uf=ufNormalizada(data.localityState);
+   if(cidade&&uf){try{const c=await Promise.race([publicContent(cidade,uf),new Promise(resolve=>setTimeout(()=>resolve(null),4500))]);if(c&&Array.isArray(c.desafios)){desafio=c.desafios.find(e=>String(e.id)===String(run.challengeId));}}catch(e){console.warn('Patrocinador do desafio indisponivel:',e)}}
+  }
+  showFinishSponsor(run,desafio||null);return;
+ }
  if(!finishAds.some(x=>x.image)){
   const cidade=String(data.localityCity||'').trim(),uf=ufNormalizada(data.localityState);
-  if(cidade&&uf){
-   try{
-    const c=await Promise.race([publicContent(cidade,uf),new Promise(resolve=>setTimeout(()=>resolve(null),4500))]);
-    if(c&&Array.isArray(c.banners)){
-     const anuncios=c.banners.filter(x=>x.imagem&&String(x.posicao||'home').split(',').map(v=>v.trim().toLowerCase()).includes('finish')).map(x=>({image:x.imagem,url:x.link||''}));
-     finishAds.splice(0,finishAds.length,...anuncios);
-    }
-   }catch(e){console.warn('Publicidade de conclusao indisponivel:',e)}
-  }
+  if(cidade&&uf){try{const c=await Promise.race([publicContent(cidade,uf),new Promise(resolve=>setTimeout(()=>resolve(null),4500))]);if(c&&Array.isArray(c.banners)){const anuncios=c.banners.filter(x=>x.imagem&&String(x.posicao||'home').split(',').map(v=>v.trim().toLowerCase()).includes('finish')).map(x=>({image:x.imagem,url:x.link||''}));finishAds.splice(0,finishAds.length,...anuncios)}}catch(e){console.warn('Publicidade de conclusao indisponivel:',e)}}
  }
- showFinishSponsor(run);
+ showFinishSponsor(run,null);
 }
-function showFinishSponsor(r){
- const patrocinadores=finishAds.filter(x=>x.image);const ad=patrocinadores.length?patrocinadores[finishSponsorIndex++%patrocinadores.length]:null;openModal(`<div class="finish-head"><i data-lucide="check-circle-2"></i><h2>Atividade finalizada!</h2><p>Você percorreu <strong>${r.km.toFixed(2).replace('.',',')} km</strong>. Parabéns!</p></div>${ad?`<p class="small" style="text-align:center;margin:18px 0 8px">OFERECIMENTO</p><div class="finish-sponsor">${ad.url?`<a href="${escapeHtml(ad.url)}" target="_blank" rel="noopener noreferrer">`:``}<img src="${escapeHtml(ad.image)}" alt="Patrocinador da atividade">${ad.url?`</a>`:``}</div>`:``}<button class="bigbtn" onclick="showSportFinishDetails(${r.id})">Continuar <i data-lucide="arrow-right"></i></button><button class="ghost" onclick="closeModal()">Fechar</button>`)
+function showFinishSponsor(r,desafio=null){
+ const isChallenge=!!r.challengeId;
+ const patrocinadores=finishAds.filter(x=>x.image);
+ const ad=isChallenge?(desafio?.patrocinadorImagem?{image:desafio.patrocinadorImagem,url:desafio.patrocinadorLink||'',name:desafio.patrocinador||''}:null):(patrocinadores.length?patrocinadores[finishSponsorIndex++%patrocinadores.length]:null);
+ const validUrl=ad&&/^https:\/\//i.test(ad.url||'')?ad.url:'';
+ const title=isChallenge&&desafio?'Desafio: '+escapeHtml(desafio.title||desafio.titulo||''):'Atividade finalizada!';
+ openModal(`<div class="finish-head"><i data-lucide="check-circle-2"></i><h2>Atividade finalizada!</h2><p>${title}</p><p>Você percorreu <strong>${Number(r.km).toFixed(2).replace('.',',')} km</strong>. Parabéns!</p></div>${ad?`<p class="small" style="text-align:center;margin:18px 0 8px">OFERECIMENTO${ad.name?' DE '+escapeHtml(ad.name):''}</p><div class="finish-sponsor">${validUrl?`<a href="${escapeHtml(validUrl)}" target="_blank" rel="noopener noreferrer">`:''}<img src="${escapeHtml(ad.image)}" alt="Banner do patrocinador do desafio">${validUrl?'</a>':''}</div>`:''}<button class="bigbtn" onclick="showSportFinishDetails(${r.id})">Continuar <i data-lucide="arrow-right"></i></button><button class="ghost" onclick="closeModal()">Fechar</button>`);refreshIcons();
 }
 function birthdayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function checkBirthday(){if(!data.birth)return;const parts=data.birth.split('-').map(Number),now=new Date();if(parts[1]!==now.getMonth()+1||parts[2]!==now.getDate())return;if(localStorage.getItem('uem_birthday_seen')===birthdayKey())return;const overlay=$('birthdayOverlay');if(!overlay)return;$('birthdayMessage').textContent=`${(data.name||'Corredor').split(' ')[0]}, que seu novo ciclo seja cheio de saúde, energia e quilômetros de conquistas!`;$('birthdayConfetti').innerHTML=Array.from({length:60},(_,i)=>`<span style="left:${Math.random()*100}%;animation-delay:${Math.random()*2}s;background:${['#b6f43c','#fff','#77a5fa','#ffd96a'][i%4]}"></span>`).join('');overlay.classList.remove('hide');refreshIcons()}

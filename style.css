@@ -269,3 +269,19 @@ body{background:#eef1fa} .app{background:#f6f8ff;box-shadow:0 18px 70px rgba(20,
 .auth-box button.link{color:#0130ff!important}.auth-box .auth-password-toggle{color:#0130ff!important}.auth-box #authError{color:#bd2148}
 #home .flash-tile .flash-create{background:#e1fb0d!important;color:#0130ff!important}#home .flash-create .fa-plus{font-size:28px;font-weight:900}
 @media(max-width:420px){.flash-stage>img{width:82%;height:72%;border-width:9px;border-bottom-width:18px}.flash-stage:before{height:17px}.flash-info{bottom:12px;padding:10px}}
+
+/* Ajustes pontuais solicitados — azul #0130ff, branco e neon #e1fb0d. */
+#home .brand-banner{display:none!important}
+#home .top{margin-top:12px}
+/* Sem tons esverdeados na interface; neon reservado a detalhes da identidade. */
+#home .flash-tile .flash-create,#home .flash-tile .flash-create:hover{background:#0130ff!important;color:#fff!important;border-color:#fff!important}
+#home .flash-tile .flash-create svg{color:#fff!important;stroke:#fff!important;width:30px;height:30px;stroke-width:3}
+#events .challenge-info .bigbtn,#home .challenge-info .bigbtn{background:#0130ff!important;color:#fff!important}
+#events .challenge-info .bigbtn svg,#home .challenge-info .bigbtn svg{color:#fff!important}
+/* Imagem inteira, proporcional e responsiva, sem cortes, mantendo o estilo colagem. */
+.flash-overlay{padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))}
+.flash-shell{width:min(100%,440px);height:min(96dvh,880px);max-height:100%;min-height:0}
+.flash-stage{min-height:0;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.flash-stage>img{width:calc(100% - 32px)!important;height:calc(100% - 40px)!important;max-width:100%;max-height:100%;object-fit:contain!important;border:clamp(5px,1.8vw,10px) solid #fff!important;border-bottom-width:clamp(10px,3vw,22px)!important;transform:rotate(-3deg)!important;box-sizing:border-box;pointer-events:none}
+.flash-stage .flash-info{pointer-events:auto}
+@media(max-width:390px){.flash-shell{height:96dvh;gap:8px}.flash-stage>img{width:calc(100% - 22px)!important;height:calc(100% - 26px)!important}}

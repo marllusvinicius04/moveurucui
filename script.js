@@ -433,11 +433,13 @@ const renderBeforeWeekly=render;render=function(){renderBeforeWeekly();renderWee
 
 // FLASHES — comunidade (24h) e anúncios com validade administrativa.
 let flashCommunity=[],flashSponsored=[],flashMy=[],flashCurrent=[],flashIndex=0,flashFeed='',flashTouchStart=0,flashTouchY=0;
-let flashStoryTimer=null,flashStoryStarted=0,flashStoryRemaining=10000;
+let flashStoryTimer=null,flashStoryStarted=0,flashStoryRemaining=10000,flashStoryPaused=false;
 function flashStopTimer(){if(flashStoryTimer){clearTimeout(flashStoryTimer);flashStoryTimer=null}}
 function flashStoryProgress(){const bar=document.getElementById('flashProgress');if(!bar)return;bar.innerHTML=flashCurrent.map((_,i)=>'<span class="flash-progress-track"><span class="flash-progress-fill" style="width:'+(i<flashIndex?100:0)+'%"></span></span>').join('')}
-function flashStartTimer(){flashStopTimer();if(!flashCurrent.length||document.hidden)return;flashStoryRemaining=10000;flashStoryStarted=Date.now();const fill=document.querySelectorAll('#flashProgress .flash-progress-fill')[flashIndex];if(fill){fill.style.transition='none';fill.style.width='0%';void fill.offsetWidth;fill.style.transition='width 10s linear';fill.style.width='100%'}flashStoryTimer=setTimeout(()=>{flashStoryTimer=null;if(!document.getElementById('flashOverlay').hidden)flashMove(1)},10000)}
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(flashStoryTimer){flashStoryRemaining=Math.max(0,flashStoryRemaining-(Date.now()-flashStoryStarted));flashStopTimer();const fill=document.querySelectorAll('#flashProgress .flash-progress-fill')[flashIndex];if(fill){const width=getComputedStyle(fill).width;fill.style.transition='none';fill.style.width=width}}}else if(!document.getElementById('flashOverlay').hidden&&flashCurrent.length&&!flashStoryTimer){flashStoryStarted=Date.now();const fill=document.querySelectorAll('#flashProgress .flash-progress-fill')[flashIndex];if(fill){void fill.offsetWidth;fill.style.transition='width '+flashStoryRemaining+'ms linear';fill.style.width='100%'}flashStoryTimer=setTimeout(()=>{flashStoryTimer=null;flashMove(1)},flashStoryRemaining)}});
+function flashStartTimer(){flashStopTimer();if(!flashCurrent.length||document.hidden)return;flashStoryPaused=false;flashStoryRemaining=10000;flashStoryStarted=Date.now();const fill=document.querySelectorAll('#flashProgress .flash-progress-fill')[flashIndex];if(fill){fill.style.transition='none';fill.style.width='0%';void fill.offsetWidth;fill.style.transition='width 10s linear';fill.style.width='100%'}flashStoryTimer=setTimeout(()=>{flashStoryTimer=null;if(!document.getElementById('flashOverlay').hidden)flashMove(1)},10000)}
+function flashPauseStory(){if(flashStoryPaused||!flashStoryTimer)return;flashStoryPaused=true;flashStoryRemaining=Math.max(1,flashStoryRemaining-(Date.now()-flashStoryStarted));flashStopTimer();const fill=document.querySelectorAll('#flashProgress .flash-progress-fill')[flashIndex];if(fill){const width=getComputedStyle(fill).width;fill.style.transition='none';fill.style.width=width}}
+function flashResumeStory(){if(!flashStoryPaused||document.hidden||document.getElementById('flashOverlay').hidden)return;flashStoryPaused=false;flashStoryStarted=Date.now();const fill=document.querySelectorAll('#flashProgress .flash-progress-fill')[flashIndex];if(fill){void fill.offsetWidth;fill.style.transition='width '+flashStoryRemaining+'ms linear';fill.style.width='100%'}flashStoryTimer=setTimeout(()=>{flashStoryTimer=null;flashMove(1)},flashStoryRemaining)}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flashPauseStory();else flashResumeStory()});
 
 const flashShuffle=a=>{const x=[...a];for(let i=x.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
 const FLASH_COVER_COMMUNITY='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRur3h3OyQJvHy7UShYLSx8vf4Ax5F9NWRoZzPLr2WK1WmKXutBzYlIses&s=10';
@@ -518,26 +520,32 @@ async function publishFlashPhoto(el){
 async function loadMyFlashes(){if(!sessionToken)return;try{const r=await api({action:'flashMine',token:sessionToken});flashMy=r.flashes||[]}catch(e){console.warn(e)}}
 async function openFlashFeed(kind){flashFeed=kind;const overlay=document.getElementById('flashOverlay');overlay.hidden=false;document.getElementById('flashHeader').textContent=kind==='mine'?'Meus Flashes':kind==='sponsored'?'Pra você':'Flashes da comunidade';document.getElementById('flashCounter').textContent='Carregando';document.getElementById('flashStage').innerHTML='<div class="flash-loading" role="status"><span class="flash-spinner"></span><strong>Abrindo Flashes...</strong><small>Preparando suas imagens</small></div>';try{if(kind==='mine')await loadMyFlashes();else await flashRefresh();flashCurrent=kind==='mine'?[...flashMy]:kind==='sponsored'?flashShuffle(flashSponsored):flashShuffle(flashCommunity);flashIndex=0;if(overlay.hidden)return;flashDraw()}catch(e){document.getElementById('flashCounter').textContent='';document.getElementById('flashStage').innerHTML='<div class="flash-empty"><h3>Não foi possível carregar</h3><p>Verifique sua conexão e tente novamente.</p><button onclick="openFlashFeed(\''+kind+'\')">Tentar novamente</button></div>'}}
 function closeFlashFeed(){flashStopTimer();document.getElementById('flashOverlay').hidden=true;flashCurrent=[];document.getElementById('flashProgress').innerHTML=''}
-function flashMove(delta){flashStopTimer();if(!flashCurrent.length)return;flashIndex=(flashIndex+delta+flashCurrent.length)%flashCurrent.length;flashDraw()}
+function flashMove(delta){flashStoryPaused=false;flashStopTimer();if(!flashCurrent.length)return;flashIndex=(flashIndex+delta+flashCurrent.length)%flashCurrent.length;flashDraw()}
 function flashDraw(){flashStopTimer();flashStoryProgress();const stage=document.getElementById('flashStage'),count=document.getElementById('flashCounter');if(!flashCurrent.length){count.textContent='';if(flashLoadError&&flashFeed!=='mine'){stage.innerHTML='<div class="flash-empty"><h3>Não foi possível consultar os Flashes</h3><p>'+escapeHtml(flashLoadError)+'</p><button onclick="openFlashFeed(\''+flashFeed+'\')">Tentar novamente</button></div>';return}stage.innerHTML='<div class="flash-empty"><i data-lucide="image-off"></i><h3>Ops, sem flashes disponíveis</h3><p>'+ (flashFeed==='sponsored'?'Nenhuma novidade por aqui no momento.':'Seja o primeiro a compartilhar uma foto!') +'</p>'+ (flashFeed==='sponsored'?'':'<button onclick="closeFlashFeed();chooseFlashPhoto()">Publicar meu Flash</button>') +'</div>';refreshIcons();return}const f=flashCurrent[flashIndex],mine=flashFeed==='mine',paid=flashFeed==='sponsored';count.textContent=(flashIndex+1)+' de '+flashCurrent.length;const action=paid&&f.link?'<a href="'+escapeHtml(f.link)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(f.botao||'Fale conosco')+' ↗</a>':mine?'<button onclick="flashDelete(flashCurrent[flashIndex].id)">Excluir</button>':'';stage.innerHTML='<div class="flash-image-loading" role="status"><span class="flash-spinner"></span><small>Carregando imagem...</small></div><img alt="Foto de Flash" onload="this.previousElementSibling.remove()" onerror="this.previousElementSibling.innerHTML=\'Imagem indisponível\'" src="'+escapeHtml(f.imagem)+'"><div class="flash-info"><div><strong>'+escapeHtml(f.nome||'Atleta')+'</strong><small>'+(mine?Number(f.visualizacoes||0)+' visualizações':paid?'Publicidade':'Foto da comunidade')+'</small></div>'+action+'</div>';refreshIcons();flashStartTimer();if(!mine&&!paid&&sessionToken)api({action:'flashView',token:sessionToken,id:f.id}).catch(()=>{})}
 async function flashDelete(id){if(!confirm('Excluir este Flash?'))return;flashBusy('Excluindo seu Flash...');try{await api({action:'flashDelete',token:sessionToken,id});await loadMyFlashes();flashCurrent=[...flashMy];flashIndex=Math.min(flashIndex,Math.max(0,flashCurrent.length-1));flashDraw();await flashRefresh();flashNotice('Flash excluído com sucesso!')}catch(e){flashNotice('Não foi possível excluir: '+e.message,true)}finally{flashBusyEnd()}}
 const oldFlashScreen=showScreen;showScreen=function(id){oldFlashScreen(id);if(id==='home')flashRefresh();const oldProfileFlash=document.getElementById('myFlashesProfile');if(oldProfileFlash)oldProfileFlash.remove()};
-document.getElementById('flashStage').addEventListener('touchstart',e=>{flashTouchStart=e.touches[0].clientX;flashTouchY=e.touches[0].clientY},{passive:true});document.getElementById('flashStage').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-flashTouchStart;if(Math.abs(d)>45)flashMove(d<0?1:-1);else if(flashFeed==='sponsored'&&flashTouchY-e.changedTouches[0].clientY>65){const url=flashCurrent[flashIndex]?.link;if(url&&/^https:\/\//.test(url))window.open(url,'_blank','noopener,noreferrer')}},{passive:true});
+if(!window.PointerEvent)document.getElementById('flashStage').addEventListener('touchstart',e=>{flashTouchStart=e.touches[0].clientX;flashTouchY=e.touches[0].clientY},{passive:true});if(!window.PointerEvent)document.getElementById('flashStage').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-flashTouchStart;if(Math.abs(d)>45)flashMove(d<0?1:-1);else if(flashFeed==='sponsored'&&flashTouchY-e.changedTouches[0].clientY>65){const url=flashCurrent[flashIndex]?.link;if(url&&/^https:\/\//.test(url))window.open(url,'_blank','noopener,noreferrer')}},{passive:true});
 setTimeout(flashRefresh,1200);
 
-// Navegação por toque/clique: metade esquerda volta, metade direita avança.
+// Stories: toque esquerdo/direito navega; segurar pausa os 10 segundos.
 (function(){
- const stage=document.getElementById('flashStage');
- if(!stage)return;
- let startX=0,startY=0,suppressUntil=0;
- stage.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY},{passive:true});
- stage.addEventListener('pointerup',e=>{if(Math.abs(e.clientX-startX)>30||Math.abs(e.clientY-startY)>30)suppressUntil=Date.now()+500},{passive:true});
- stage.addEventListener('click',e=>{
-  if(Date.now()<suppressUntil||!flashCurrent.length)return;
-  if(e.target.closest('a,button,.flash-info,.flash-empty,.flash-loading,.flash-image-loading'))return;
-  const rect=stage.getBoundingClientRect();
-  flashMove(e.clientX-rect.left<rect.width/2?-1:1);
- });
+ const stage=document.getElementById('flashStage');if(!stage)return;
+ let down=null,holdTimer=null,suppressClick=false;
+ function clearHold(){if(holdTimer){clearTimeout(holdTimer);holdTimer=null}}
+ stage.addEventListener('pointerdown',e=>{
+  if(!flashCurrent.length||e.target.closest('button,a,.flash-info'))return;
+  down={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId,held:false};suppressClick=false;
+  clearHold();holdTimer=setTimeout(()=>{if(down){down.held=true;flashPauseStory()}},180);
+ },{passive:true});
+ stage.addEventListener('pointermove',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>20){clearHold();if(down.held)flashResumeStory();down=null;suppressClick=true}},{passive:true});
+ stage.addEventListener('pointerup',e=>{
+  if(!down)return;const d=down;down=null;clearHold();
+  if(d.held){flashResumeStory();suppressClick=true;return}
+  if(Math.hypot(e.clientX-d.x,e.clientY-d.y)>25){suppressClick=true;return}
+  const rect=stage.getBoundingClientRect();flashMove(e.clientX-rect.left<rect.width/2?-1:1);suppressClick=true;
+ },{passive:true});
+ stage.addEventListener('pointercancel',()=>{clearHold();if(down?.held)flashResumeStory();down=null;suppressClick=true},{passive:true});
+ stage.addEventListener('click',e=>{if(suppressClick){e.preventDefault();suppressClick=false;return}if(!flashCurrent.length||e.target.closest('a,button,.flash-info,.flash-empty,.flash-loading'))return;const r=stage.getBoundingClientRect();flashMove(e.clientX-r.left<r.width/2?-1:1)});
 })();
 
 // Incentivos ocasionais: no máximo uma mensagem a cada três dias por dispositivo.

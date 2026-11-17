@@ -715,3 +715,12 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 #home .footertext strong{font-family:Outfit,sans-serif;font-weight:900;letter-spacing:1px}
 #home .footertext .footer-made{font-weight:600}
 .support-links button .fa-instagram{font-size:21px;width:20px;flex:none;text-align:center}
+
+/* Carregamento da conta centralizado no próprio card */
+#authOverlay .auth-box:has(.auth-loading:not([hidden])){min-height:290px!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
+#authOverlay .auth-loading:not([hidden]){position:absolute!important;inset:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:12px!important;padding:24px!important;text-align:center!important;background:#fff!important;color:#111!important}
+#authOverlay .auth-loading-user{margin:0 0 8px!important;align-self:center!important}
+/* Avatar de quem publicou o Flash */
+.flash-user-icon{position:relative;overflow:hidden;flex-shrink:0}
+.flash-user-icon .flash-avatar-fallback{position:absolute;inset:0;display:grid;place-items:center}
+.flash-user-icon img{position:relative;z-index:1;display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}

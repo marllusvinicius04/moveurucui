@@ -256,14 +256,32 @@ const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbyXmVrDVKmnjUPveG
 const SESSION_KEY='uem_session_v1';
 const ACCOUNT_CACHE_KEY='uem_account_cache_v1';
 let sessionToken=localStorage.getItem(SESSION_KEY)||'';
-function friendlyServiceError(message){const m=String(message||'');if(/sessão expirada|sessão inválida|credenciais inválidas|conta indisponível/i.test(m))return 'Sua sessão expirou. Entre novamente na sua conta.';if(/senha|e-mail|email|código|codigo|já cadastrado|não encontrado|incorret|inválid|invalid|obrigatóri|formato|tamanho|grande|permissão/i.test(m)&&!/script|planilha|sheet|servidor|implantação|deploy/i.test(m))return m;return 'Não foi possível concluir agora. Confira sua conexão e tente novamente.'}function api(payload){if(!APPS_SCRIPT_URL.startsWith('https://'))return Promise.reject(Error('Serviço temporariamente indisponível'));return fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow'}).then(async r=>{const t=await r.text();try{return JSON.parse(t)}catch(e){throw Error('Serviço temporariamente indisponível')}}).then(r=>{if(!r.ok){console.warn('Falha de serviço na ação:',payload.action);throw Error(friendlyServiceError(r.error))};return r})}
+function friendlyServiceError(message){
+ const m=String(message||'').trim();
+ if(!m)return 'O servidor não informou o motivo da falha. Verifique a implantação do Apps Script.';
+ if(/Failed to fetch|NetworkError|Load failed|fetch failed/i.test(m))return 'Não foi possível conectar ao Apps Script. Verifique a URL da implantação, as permissões de acesso e sua conexão.';
+ return m;
+}
+async function api(payload){
+ if(!APPS_SCRIPT_URL.startsWith('https://'))throw Error('URL do Apps Script não configurada.');
+ let response;
+ try{response=await fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow'});}
+ catch(err){throw Error('Falha de conexão com o Apps Script: '+(err.message||'sem detalhes'));}
+ const body=await response.text();let result;
+ try{result=JSON.parse(body)}catch(err){
+   console.error('Resposta inesperada do Apps Script:',response.status,body.slice(0,500));
+   throw Error('O Apps Script retornou uma resposta inválida (HTTP '+response.status+'). Confira se a implantação está ativa e acessível.');
+ }
+ if(!response.ok||!result.ok){console.error('Falha no Apps Script:',payload.action,result.error||result.message||result);throw Error(result.error||result.message||'Erro HTTP '+response.status);}
+ return result;
+}
 function publicContent(city,uf){return new Promise((resolve,reject)=>{if(!APPS_SCRIPT_URL.startsWith('https://'))return resolve(null);let cb='uemcb'+Date.now()+Math.floor(Math.random()*10000),s=document.createElement('script');let timer=setTimeout(()=>{cleanup();reject(Error('Tempo esgotado'))},15000);function cleanup(){clearTimeout(timer);delete window[cb];s.remove()}window[cb]=r=>{cleanup();r.ok?resolve(r):reject(Error(r.error))};s.onerror=()=>{cleanup();reject(Error('Não foi possível carregar anúncios'))};s.src=APPS_SCRIPT_URL+'?'+new URLSearchParams({action:'content',cidade:city||'',uf:uf||'',callback:cb});document.head.appendChild(s)})}
 function authMessage(m){document.getElementById('authError').textContent=m||''}
 function authStep(step){document.querySelectorAll('.auth-step').forEach(x=>x.hidden=x.dataset.step!==step);authMessage('')}
 function authOpen(){document.getElementById('authOverlay').hidden=false;authStep('start')}
 function authClose(){document.getElementById('authOverlay').hidden=true}
 function authBusy(on,message){const el=document.getElementById('authLoading');if(!el)return;el.hidden=!on;document.getElementById('authLoadingText').textContent=message||'Conectando...'}
-async function authSubmit(e){e.preventDefault();let f=e.target,action=f.dataset.action,b=f.querySelector('button[type=submit]');b.disabled=true;authMessage('');authBusy(true,action==='login'?'Entrando na sua conta...':action==='register'?'Criando seu perfil...':action==='forgot'?'Enviando seu código...':'Preparando sua experiência...');try{let v=Object.fromEntries(new FormData(f));if(action==='preRegister'){window.pendingRegister={email:v.email,password:v.password};authStep('profile');return}if(action==='register'){let p={...window.pendingRegister,...v,action:'register',cidade:data.localityCity||data.user?.cidade||'',uf:data.localityState||data.user?.uf||''};let r=await api(p);loginDone(r,true)}else if(action==='login'){loginDone(await api({action,...v}),false)}else if(action==='forgot'){let r=await api({action,...v});authStep('reset');authMessage(r.message);document.getElementById('resetEmail').value=v.email}else if(action==='reset'){await api({action,...v});authStep('login');authMessage('Senha redefinida. Entre com a nova senha.')}}catch(err){authMessage(friendlyServiceError(err.message))}finally{b.disabled=false;authBusy(false)}}
+async function authSubmit(e){e.preventDefault();let f=e.target,action=f.dataset.action,b=f.querySelector('button[type=submit]');b.disabled=true;authMessage('');authBusy(true,action==='login'?'Entrando na sua conta...':action==='register'?'Criando seu perfil...':action==='forgot'?'Enviando seu código...':'Preparando sua experiência...');try{let v=Object.fromEntries(new FormData(f));if(action==='preRegister'){window.pendingRegister={email:v.email,password:v.password};authStep('profile');return}if(action==='register'){let p={...window.pendingRegister,...v,action:'register',cidade:data.localityCity||data.user?.cidade||'',uf:data.localityState||data.user?.uf||''};let r=await api(p);loginDone(r,true)}else if(action==='login'){const result=await api({action,...v});try{loginDone(result,false)}catch(uiError){console.error('Login aceito, mas houve erro ao preparar a interface:',uiError);sessionToken=result.token;localStorage.setItem(SESSION_KEY,result.token);localStorage.setItem(ACCOUNT_CACHE_KEY,JSON.stringify(result.user));applyAccount(result.user);authClose();}}else if(action==='forgot'){let r=await api({action,...v});authStep('reset');authMessage(r.message);document.getElementById('resetEmail').value=v.email}else if(action==='reset'){await api({action,...v});authStep('login');authMessage('Senha redefinida. Entre com a nova senha.')}}catch(err){authMessage(friendlyServiceError(err.message))}finally{b.disabled=false;authBusy(false)}}
 // Histórico sincronizado na própria linha do usuário (aba Usuarios).
 // Backup por conta impede misturar treinos de usuários diferentes no mesmo aparelho.
 const ACTIVITY_BACKUP_PREFIX='corresul_runs_';

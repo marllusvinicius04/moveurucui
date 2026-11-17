@@ -563,3 +563,12 @@ body{background:#f1f1f1}
 #flashMineAvatar{overflow:hidden!important;border-radius:50%!important}
 #flashMineAvatar img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
 @media(max-height:690px){.auth-showcase{height:150px!important}.auth-box{padding-bottom:14px!important}.auth-box .auth-kicker{margin-bottom:10px!important}}
+
+/* CorreSul — identidade piauiense e login com foto circular */
+.auth-overlay{background:#161616!important;background-image:linear-gradient(rgba(0,0,0,.70),rgba(0,0,0,.78)),url('https://i.pinimg.com/474x/c1/6d/5f/c16d5f0a2db5aeb991a15a9ad3f3187b.jpg')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;}
+.auth-box{position:relative!important;overflow:visible!important;margin-top:60px!important;padding-top:83px!important;border-radius:25px!important;background:#fff!important;max-height:calc(100dvh - 112px)!important;box-shadow:0 22px 70px #0009!important;}
+.auth-runner-medallion{position:absolute;z-index:2;top:-72px;left:50%;transform:translateX(-50%);width:136px;height:136px;padding:6px;border-radius:50%;background:#FFBA00;box-shadow:0 12px 32px #0005,0 0 0 6px #ffffff40;overflow:hidden;}
+.auth-runner-medallion img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center;}
+.auth-box .auth-brand{justify-content:center!important;}
+.auth-box .auth-kicker{text-align:center!important;color:#6a570b!important;font-weight:800!important;letter-spacing:1.2px!important;}
+@media(max-height:690px){.auth-box{margin-top:46px!important;padding-top:66px!important;max-height:calc(100dvh - 80px)!important;overflow-y:auto!important}.auth-runner-medallion{width:108px;height:108px;top:-53px}}

@@ -724,3 +724,8 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 .flash-user-icon{position:relative;overflow:hidden;flex-shrink:0}
 .flash-user-icon .flash-avatar-fallback{position:absolute;inset:0;display:grid;place-items:center}
 .flash-user-icon img{position:relative;z-index:1;display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}
+
+/* Flash do autor: foto preenchendo o avatar sem ícone por cima */
+.flash-info .flash-user-icon{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;}
+.flash-info .flash-user-icon .flash-publisher-photo{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%;}
+.flash-info .flash-user-icon.photo-failed:after{content:"\f007";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;color:#fff;font-size:15px;}

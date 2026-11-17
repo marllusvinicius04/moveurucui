@@ -260,7 +260,7 @@ function playActivityFinishSound(){
 
 
 /* CONFIGURAÇÃO: cole a URL /exec da implantação do Apps Script abaixo */
-const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxDtLUCKuiDgJ5XIIVf7bKPj4NEp73QkFo-3cy7Smx63w9_OBKk2HAlUQVdGs58yl-ICg/exec';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbz3Ub6BzTVd8VcT_z1XY3yzpsY-v1PpZL9Cwf02MdJXcmHVuTnyU9QG3levyub6vhItAg/exec';
 const SESSION_KEY='uem_session_v1';
 const ACCOUNT_CACHE_KEY='uem_account_cache_v1';
 let sessionToken=localStorage.getItem(SESSION_KEY)||'';

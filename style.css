@@ -162,3 +162,7 @@
 .flash-tile .flash-create svg{width:27px;height:27px;stroke-width:2.2;flex-shrink:0;}
 
 .flash-action-busy{position:fixed;inset:0;z-index:12050;background:#07120dbb;display:grid;place-items:center;padding:20px}.flash-action-busy[hidden],.flash-action-notice[hidden]{display:none!important}.flash-action-busy-card{width:min(88vw,300px);padding:30px 20px;background:#182920;color:#fff;border:1px solid #b6f43c55;border-radius:24px;display:flex;align-items:center;flex-direction:column;gap:14px;text-align:center;box-shadow:0 15px 55px #0006}.flash-action-busy-card small{color:#b9cbbd}.flash-action-notice{position:fixed;left:50%;transform:translateX(-50%);bottom:85px;width:min(90vw,400px);z-index:12060;padding:15px 18px;border-radius:16px;background:#173a26;color:#e9ffd6;border:1px solid #b6f43c;font-size:14px;font-weight:700;text-align:center;box-shadow:0 10px 35px #0005}.flash-action-notice.is-error{background:#482222;color:#fff;border-color:#e88b8b}.flash-sponsored-cover{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(140deg,#173c25,#548f20)}.flash-sponsored-cover svg{color:#d9ff78;width:30px;height:30px}
+
+/* Área inteira da foto responde a toque para avançar ou voltar. */
+.flash-stage::before,.flash-stage::after{pointer-events:none}
+.flash-stage>img{cursor:pointer}

@@ -729,3 +729,21 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 .flash-info .flash-user-icon{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;}
 .flash-info .flash-user-icon .flash-publisher-photo{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%;}
 .flash-info .flash-user-icon.photo-failed:after{content:"\f007";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;color:#fff;font-size:15px;}
+
+/* URURUN — Flashes: paleta oficial preto, branco e amarelo, com contraste */
+.flash-overlay{background:#0b0b0b!important;color:#fff!important}
+.flash-shell{background:#111!important;color:#fff!important}
+.flash-stage{background:#111!important;color:#fff!important}
+.flash-stage .flash-info{color:#fff!important;text-shadow:0 1px 5px rgba(0,0,0,.9)!important}
+.flash-stage .flash-info strong,.flash-stage .flash-info small,.flash-stage .flash-info span{color:#fff!important}
+.flash-info .flash-user-icon{background:#262626!important;border:1.5px solid rgba(255,255,255,.75)!important;color:#fff!important}
+.flash-progress-track{background:rgba(255,255,255,.36)!important}
+.flash-progress-fill{background:#FFBA00!important}
+.flash-side-arrow{background:#FFBA00!important;color:#111!important;border:1px solid #ffcf54!important;box-shadow:0 4px 14px rgba(0,0,0,.32)!important}
+.flash-side-arrow:active{background:#fff!important;color:#111!important}
+.flash-toolbar button{color:#fff!important;filter:drop-shadow(0 2px 4px #000)!important}
+.flash-loading,.flash-image-loading{background:#111!important;color:#fff!important}
+.flash-loading small,.flash-image-loading small{color:#e2e2e2!important}
+.flash-story-action button,.flash-story-action a{background:#FFBA00!important;color:#111!important;font-weight:800!important}
+.flash-paused-mark{background:rgba(0,0,0,.78)!important;color:#FFBA00!important}
+.flash-footer span{color:#fff!important}

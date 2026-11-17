@@ -240,3 +240,32 @@ body{background:#eef1fa} .app{background:#f6f8ff;box-shadow:0 18px 70px rgba(20,
 #home .floating-start{box-shadow:0 9px 25px rgba(1,48,255,.19)}
 .map .map-placeholder svg,#map .map-placeholder svg{color:#0130ff!important}#gpsstatus{color:#0130ff}
 @media(max-width:360px){#home .brand-tag{font-size:8px;max-width:84px}#home .flash-strip{gap:6px!important}#home .flash-tile .flash-thumb{border-width:4px!important}}
+
+/* CorreSul: Stories com colagem e login social (2026-11-17) */
+.flash-overlay{background:rgba(1,12,70,.95);padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+.flash-shell{height:min(94dvh,880px);gap:9px}
+.flash-progress{display:flex;gap:4px;height:4px;width:100%;flex-shrink:0}
+.flash-progress-track{height:4px;flex:1;border-radius:10px;background:#ffffff50;overflow:hidden}
+.flash-progress-fill{display:block;height:100%;background:#e1fb0d;border-radius:10px;width:0}
+.flash-stage{background:#f5f7ff;border-radius:25px;overflow:hidden;isolation:isolate;box-shadow:inset 0 0 0 1px #dce3ff}
+.flash-stage:before{top:6%;left:35%;width:30%;height:22px;border-radius:0;background:#e1fb0d;transform:rotate(-9deg);opacity:1;z-index:4;pointer-events:none}
+.flash-stage:after{right:-14%;bottom:18%;width:70%;height:16%;background:#0130ff;transform:rotate(-25deg);border-radius:0;opacity:.12;pointer-events:none}
+.flash-stage>img{width:83%;height:76%;object-fit:cover;border:12px solid #fff;border-bottom-width:23px;border-radius:5px;transform:rotate(-7deg);box-shadow:0 16px 38px #09227535,0 0 0 1px #e3e7ff;flex-shrink:0;cursor:pointer;z-index:1}
+.flash-info{background:#0130ff;color:#fff;bottom:15px;left:14px;right:14px;border-radius:15px;box-shadow:0 5px 15px #0130ff30}
+.flash-info small{color:#e8edff}
+.flash-toolbar button,.flash-footer button{background:#0130ff;border:1px solid #ffffff5c}
+.flash-footer span{color:white}
+.flash-loading,.flash-image-loading{color:#0130ff}.flash-loading small,.flash-image-loading small{color:#5668a0}
+.flash-image-loading{background:#f5f7ff}
+.auth-overlay{background:linear-gradient(160deg,#f8faff 0%,#ffffff 50%,#edf1ff 100%)!important;padding:20px 16px!important}
+.auth-overlay:before{background:radial-gradient(circle at 90% 5%,#e1fb0d60,transparent 32%),radial-gradient(circle at 0 100%,#0130ff14,transparent 42%);z-index:-1}
+.auth-box{background:#fff!important;color:#172046!important;border:1px solid #e3e9ff!important;box-shadow:0 18px 60px #0130ff17!important;backdrop-filter:none!important;padding:30px 24px!important;border-radius:28px!important}
+.auth-box:before{background:linear-gradient(90deg,#0130ff 0 76%,#e1fb0d 76% 100%);height:5px}
+.auth-brand{display:flex;align-items:center;gap:10px;color:#0130ff!important;font-size:22px;letter-spacing:-1px;margin-bottom:20px}.auth-brand strong{color:#0130ff}.auth-brand-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#0130ff!important;color:#e1fb0d!important;font-size:23px}
+.auth-kicker{color:#0130ff!important;font-size:10px;letter-spacing:2px}.auth-box h2{color:#101b49}.auth-box p,.auth-box .auth-note{color:#67728c!important}
+.auth-box input,.auth-box select{background:#f7f9ff!important;color:#18234c!important;border:1px solid #dce4fa!important;border-radius:13px!important}.auth-box input::placeholder{color:#77839d!important}
+.auth-box input:focus,.auth-box select:focus{outline:2px solid #0130ff!important;border-color:transparent!important}
+.auth-box button:not(.link):not(.auth-password-toggle){background:#0130ff!important;color:white!important}.auth-box button.secondary{background:#f1f4ff!important;color:#0130ff!important;border:1px solid #dbe3ff!important}
+.auth-box button.link{color:#0130ff!important}.auth-box .auth-password-toggle{color:#0130ff!important}.auth-box #authError{color:#bd2148}
+#home .flash-tile .flash-create{background:#e1fb0d!important;color:#0130ff!important}#home .flash-create .fa-plus{font-size:28px;font-weight:900}
+@media(max-width:420px){.flash-stage>img{width:82%;height:72%;border-width:9px;border-bottom-width:18px}.flash-stage:before{height:17px}.flash-info{bottom:12px;padding:10px}}

@@ -673,3 +673,23 @@ html,body{min-height:100%;overflow-x:hidden}
 .auth-box form,.auth-box input,.auth-box select{min-width:0;max-width:100%;box-sizing:border-box}
 @media(max-width:380px){.auth-overlay{padding:16px 10px!important}.auth-box{padding:22px 16px!important}.auth-login-logo img{max-width:135px}}
 @media(max-height:650px){.auth-overlay{justify-content:flex-start!important;padding-top:14px!important;padding-bottom:14px!important}.auth-box{margin:auto!important;padding-top:18px!important;padding-bottom:18px!important}.auth-box .auth-kicker{margin-bottom:13px!important}}
+/* Login compacto responsivo — somente apresentação */
+.auth-overlay{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;padding:clamp(12px,3vh,28px) 12px!important;height:100dvh!important;min-height:100dvh!important;box-sizing:border-box!important}
+.auth-overlay[hidden],.auth-step[hidden]{display:none!important}
+.auth-box{box-sizing:border-box!important;flex:0 0 auto!important;width:min(100%,390px)!important;min-width:0!important;height:auto!important;max-height:none!important;margin:auto!important;overflow:visible!important;padding:clamp(16px,3vh,25px) clamp(17px,4vw,25px)!important;border-radius:20px!important}
+.auth-login-logo{margin:0 0 7px!important}
+.auth-login-logo img{width:auto!important;max-width:min(115px,35vw)!important;max-height:36px!important;object-fit:contain!important}
+.auth-box .auth-kicker{font-size:9px!important;line-height:1.35!important;letter-spacing:.7px!important;margin:0 0 14px!important}
+.auth-box .auth-step[data-step="login"] h2{font-size:clamp(20px,5vw,25px)!important;line-height:1.12!important;margin:0 0 10px!important}
+.auth-box .auth-step[data-step="login"] form{gap:8px!important;margin-top:10px!important}
+.auth-box input,.auth-box select{box-sizing:border-box!important;width:100%!important;min-width:0!important;min-height:42px!important;padding:10px 12px!important;border-radius:11px!important;font-size:14px!important}
+.auth-box .auth-password-field input{padding-right:49px!important}
+.auth-box .auth-password-toggle{width:32px!important;height:32px!important;min-height:32px!important;right:5px!important;border-radius:8px!important}
+.auth-box button:not(.auth-password-toggle){min-height:42px!important;padding:10px 12px!important;border-radius:11px!important;font-size:13px!important;margin-top:7px!important}
+.auth-box .auth-step[data-step="login"]>button.link{margin-top:6px!important;padding:7px!important;min-height:34px!important}
+.auth-box .auth-create-link{margin-top:8px!important;min-height:40px!important;padding:9px!important}
+.auth-box .auth-step{min-width:0!important}
+@media(min-width:768px){.auth-box{width:min(390px,calc(100vw - 40px))!important;padding:24px!important}.auth-overlay{padding:24px!important}}
+@media(max-width:390px){.auth-box{width:100%!important;padding:16px!important}.auth-box .auth-kicker{margin-bottom:10px!important}.auth-box .auth-step[data-step="login"] h2{font-size:21px!important}}
+@media(max-height:680px){.auth-overlay{padding:10px 12px!important}.auth-box{padding-top:13px!important;padding-bottom:13px!important}.auth-login-logo img{max-height:28px!important}.auth-box .auth-kicker{margin-bottom:9px!important}.auth-box .auth-step[data-step="login"] h2{font-size:21px!important;margin-bottom:5px!important}.auth-box .auth-step[data-step="login"] form{gap:6px!important;margin-top:6px!important}.auth-box input,.auth-box select{min-height:39px!important;padding:8px 11px!important}.auth-box button:not(.auth-password-toggle){min-height:39px!important;padding:8px 10px!important}}
+@media(max-height:470px) and (orientation:landscape){.auth-box{margin:0 auto!important}.auth-overlay{justify-content:flex-start!important}}

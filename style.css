@@ -572,3 +572,63 @@ body{background:#f1f1f1}
 .auth-box .auth-brand{justify-content:center!important;}
 .auth-box .auth-kicker{text-align:center!important;color:#6a570b!important;font-weight:800!important;letter-spacing:1.2px!important;}
 @media(max-height:690px){.auth-box{margin-top:46px!important;padding-top:66px!important;max-height:calc(100dvh - 80px)!important;overflow-y:auto!important}.auth-runner-medallion{width:108px;height:108px;top:-53px}}
+
+
+/* RESPONSIVIDADE LOGIN — celulares, tablets, notebooks e telas baixas */
+html,body{min-height:100%;overflow-x:hidden}
+.auth-overlay{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  padding:calc(82px + env(safe-area-inset-top,0px)) 16px
+          calc(24px + env(safe-area-inset-bottom,0px))!important;
+  min-height:100dvh!important;
+  height:100dvh!important;
+}
+.auth-overlay[hidden]{display:none!important}
+.auth-box{
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+  width:min(100%,430px)!important;
+  min-width:0!important;
+  height:auto!important;
+  max-height:none!important;
+  margin:0 auto!important;
+  overflow:visible!important;
+  padding:78px clamp(16px,5vw,24px) 26px!important;
+}
+.auth-runner-medallion{
+  width:132px!important;height:132px!important;
+  top:-68px!important;
+}
+.auth-box form,.auth-step,.auth-box input,.auth-box select{min-width:0;max-width:100%}
+.auth-box input,.auth-box select{width:100%;box-sizing:border-box}
+.auth-password-field{min-width:0;width:100%;position:relative}
+.auth-password-field input{padding-right:52px!important}
+.auth-box button{max-width:100%}
+@media(min-width:768px){
+ .auth-overlay{padding-top:100px!important;padding-bottom:48px!important}
+ .auth-box{width:min(430px,calc(100vw - 48px))!important}
+}
+@media(max-width:380px){
+ .auth-overlay{padding-left:12px!important;padding-right:12px!important}
+ .auth-box{padding-left:16px!important;padding-right:16px!important}
+ .auth-box h2{font-size:clamp(20px,6vw,26px)!important}
+}
+@media(max-height:720px){
+ .auth-overlay{padding-top:64px!important;padding-bottom:18px!important}
+ .auth-box{padding-top:61px!important;padding-bottom:18px!important}
+ .auth-runner-medallion{width:108px!important;height:108px!important;top:-54px!important}
+ .auth-box .auth-kicker{margin-bottom:12px!important}
+}
+@media(max-height:480px) and (orientation:landscape){
+ .auth-overlay{padding-top:20px!important}
+ .auth-box{padding-top:20px!important}
+ .auth-runner-medallion{position:relative!important;top:auto!important;left:auto!important;transform:none!important;margin:-2px auto 12px!important;width:76px!important;height:76px!important}
+}

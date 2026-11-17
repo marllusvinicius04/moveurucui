@@ -693,3 +693,10 @@ html,body{min-height:100%;overflow-x:hidden}
 @media(max-width:390px){.auth-box{width:100%!important;padding:16px!important}.auth-box .auth-kicker{margin-bottom:10px!important}.auth-box .auth-step[data-step="login"] h2{font-size:21px!important}}
 @media(max-height:680px){.auth-overlay{padding:10px 12px!important}.auth-box{padding-top:13px!important;padding-bottom:13px!important}.auth-login-logo img{max-height:28px!important}.auth-box .auth-kicker{margin-bottom:9px!important}.auth-box .auth-step[data-step="login"] h2{font-size:21px!important;margin-bottom:5px!important}.auth-box .auth-step[data-step="login"] form{gap:6px!important;margin-top:6px!important}.auth-box input,.auth-box select{min-height:39px!important;padding:8px 11px!important}.auth-box button:not(.auth-password-toggle){min-height:39px!important;padding:8px 10px!important}}
 @media(max-height:470px) and (orientation:landscape){.auth-box{margin:0 auto!important}.auth-overlay{justify-content:flex-start!important}}
+
+/* Carregamento da conta: branco, texto preto e ícone Font Awesome */
+.auth-box .auth-loading{background:#FFFFFF!important;color:#111111!important;backdrop-filter:none!important;border-radius:inherit!important;padding:22px!important}
+.auth-box .auth-loading strong{color:#111111!important;font-weight:800!important}
+.auth-box .auth-loading small{color:#333333!important}
+.auth-box .auth-loading-user{display:grid!important;place-items:center!important;width:62px!important;height:62px!important;border-radius:50%!important;background:#FFBA00!important;color:#111111!important;font-size:25px!important;animation:authUserPulse 1.4s ease-in-out infinite!important}
+@keyframes authUserPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.78}}

@@ -134,7 +134,7 @@ function renderProfileSummary(total){const node=$('profileSummary');if(!node)ret
 function fortalezaDay(d){const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/Fortaleza',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const v=Object.fromEntries(p.map(x=>[x.type,x.value]));return v.year+'-'+v.month+'-'+v.day}
 const weekdays=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 function renderReminderSettings(){const r=data.reminder||{days:[1,2,3,4,5],time:'07:00',enabled:false};$('reminderTime').value=r.time||'07:00';$('reminderEnabled').checked=!!r.enabled;$('reminderDays').innerHTML=weekdays.map((day,i)=>`<label><input type="checkbox" value="${i}" ${r.days.includes(i)?'checked':''}><span>${day}</span></label>`).join('')}
-async function saveReminder(){const days=[...document.querySelectorAll('#reminderDays input:checked')].map(x=>Number(x.value));const enabled=$('reminderEnabled').checked;const time=$('reminderTime').value||'07:00';if(enabled&&!days.length){alert('Escolha pelo menos um dia.');return}const btn=document.querySelector('button[onclick="saveReminder()"]');const label=btn?.innerHTML;if(btn){btn.disabled=true;btn.innerHTML='<span class="reminder-spinner"></span> Salvando lembrete...'}try{if(!sessionToken)throw Error('Entre na sua conta para salvar seu lembrete.');await api({action:'saveReminder',token:sessionToken,enabled,days,time});data.reminder={enabled,days,time};save();alert(enabled?'Lembrete ativado! Você receberá e-mails motivacionais nos dias escolhidos, próximo do horário programado.':'Lembretes desativados com sucesso.')}catch(e){alert('Não foi possível salvar seu lembrete agora. Confira sua conexão e tente novamente.')}finally{if(btn){btn.disabled=false;btn.innerHTML=label}}}
+async function saveReminder(){const days=[...document.querySelectorAll('#reminderDays input:checked')].map(x=>Number(x.value));const enabled=$('reminderEnabled').checked;const time=$('reminderTime').value||'07:00';if(enabled&&!days.length){alert('Escolha pelo menos um dia.');return}const btn=document.querySelector('button[onclick="saveReminder()"]');const label=btn?.innerHTML;if(btn){btn.disabled=true;btn.innerHTML='<span class="reminder-spinner"></span> Salvando lembrete...'}try{if(!sessionToken)throw Error('Entre na sua conta para salvar seu lembrete.');await api({action:'saveReminder',token:sessionToken,enabled,days,time});data.reminder={enabled,days,time};save();alert(enabled?'Lembrete ativado! Você receberá e-mails motivacionais nos dias escolhidos, no horário escolhido (podendo haver pequeno atraso na entrega).':'Lembretes desativados com sucesso.')}catch(e){alert('Não foi possível salvar seu lembrete agora. Confira sua conexão e tente novamente.')}finally{if(btn){btn.disabled=false;btn.innerHTML=label}}}
 // Lembretes remotos por e-mail; sem alerta local duplicado.
 // Preencha os destinos oficiais antes de publicar.
 const contactConfig={whatsapp:'',about:'',social:''};
@@ -426,15 +426,18 @@ function flashNotice(message,error=false){let box=document.getElementById('flash
 function flashBusy(message){let box=document.getElementById('flashActionBusy');if(!box){box=document.createElement('div');box.id='flashActionBusy';box.className='flash-action-busy';box.innerHTML='<div class="flash-action-busy-card"><span class="flash-spinner"></span><strong id="flashBusyText"></strong><small>Aguarde um instante...</small></div>';document.body.appendChild(box)}document.getElementById('flashBusyText').textContent=message;box.hidden=false}
 function flashBusyEnd(){const box=document.getElementById('flashActionBusy');if(box)box.hidden=true}
 let flashLoadError='';
+let flashRefreshPending=null;
 async function flashRefresh(){
- try{
+ if(flashRefreshPending)return flashRefreshPending;
+ flashRefreshPending=(async()=>{try{
   const r=await publicFlashContent();
   if(!r||!Array.isArray(r.patrocinados))throw Error('O servidor não retornou a lista de anúncios. Atualize a implantação do Apps Script.');
   flashCommunity=flashShuffle(r.comunidade||[]);
   flashSponsored=flashShuffle(r.patrocinados||[]);
   flashLoadError='';
   flashSetCards();
- }catch(e){flashLoadError=e.message||'Falha de comunicação';console.warn('Erro ao consultar Flashes:',e);flashSetCards();}
+ }catch(e){flashLoadError=e.message||'Falha de comunicação';console.warn('Erro ao consultar Flashes:',e);flashSetCards();}})();
+ try{return await flashRefreshPending}finally{flashRefreshPending=null}
 }
 function publicFlashContent(){return new Promise((resolve,reject)=>{
  const cb='flashcb'+Date.now()+Math.floor(Math.random()*10000),sc=document.createElement('script');

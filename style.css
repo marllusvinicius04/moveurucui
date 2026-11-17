@@ -485,3 +485,26 @@ body{background:#f1f1f1}
 .nav button{color:#d1d1d1}
 .nav button.on{color:#FFBA00}
 .nav button.on span{background:#FFBA00;color:#111111}
+
+/* CorreSul: refinamentos visuais e navegação — não altera lógica de treino */
+:root{--corresul-bottom-nav-height:82px}
+.app{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+.nav{z-index:1200;min-height:var(--corresul-bottom-nav-height);align-items:center;padding:11px 4px max(14px,env(safe-area-inset-bottom,0px))}
+.nav button{min-width:0;flex:1;position:relative;z-index:2}
+.nav button span{display:grid;place-items:center;min-height:32px}
+.floating-start{bottom:calc(115px + env(safe-area-inset-bottom,0px));width:72px;height:72px;border:3px solid #fff;background:#FFBA00;color:#111;box-shadow:0 10px 26px #1112,0 0 0 1px #1112;font-size:10px;letter-spacing:.7px;z-index:1100}
+.floating-start .float-ring{width:28px;height:28px;border:0;background:#111;color:#FFBA00;border-radius:50%}
+.floating-start .float-ring svg{width:15px;height:15px;fill:#FFBA00;color:#FFBA00}
+.active-mini{bottom:calc(197px + env(safe-area-inset-bottom,0px));z-index:1100}
+#track .track-actions{z-index:10}
+#track .map-center-btn{z-index:20}
+.screen-back{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:#f5f5f5;color:#171717;border:1px solid #e8e8e8;margin:0 0 13px;font-size:18px;box-shadow:0 3px 10px #1111}
+.screen-back:active{background:#FFBA00}
+#home .flash-tile .flash-mine{background:#f4f4f4!important;color:#171717!important;display:grid;place-items:center}
+#home .flash-tile .flash-mine>img{display:block;width:100%;height:100%;object-fit:cover;border-radius:0!important}
+#home .flash-tile .flash-mine .fa-user{font-size:25px;color:#222}
+#home .flash-tile:nth-child(2) .flash-thumb{box-shadow:0 5px 12px #0002,0 0 0 2px #FFBA00!important}
+#home .flash-tile:nth-child(2) strong{color:#111!important}
+#home .flash-tile:nth-child(2) strong .fa-bolt{color:#d28d00;font-size:10px}
+.flash-ad-label{position:absolute;bottom:5px;left:4px;right:4px;display:flex;align-items:center;justify-content:center;gap:3px;background:#FFBA00;color:#111;border-radius:5px;padding:3px 1px;font-size:9px;font-weight:900;letter-spacing:.5px;z-index:3}
+@media(max-width:360px){.floating-start{width:66px;height:66px;bottom:calc(111px + env(safe-area-inset-bottom,0px))}.nav button{font-size:9px}}

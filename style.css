@@ -140,3 +140,6 @@
   object-position: center center;
   border-radius: 50%;
 }
+
+/* Indicadores específicos por modalidade, sem alterar o tema original */
+.sport-dashboard{background:#fff;border-radius:19px;padding:15px;margin:12px 0}.sport-dashboard-title{font-size:11px;letter-spacing:1px;font-weight:900;margin-bottom:11px;color:#4c5a51}.sport-metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.sport-metric-grid>div{background:#f3f6ef;border-radius:13px;padding:12px;min-width:0}.sport-metric-grid small{display:block;font-size:11px;color:#68756c;margin-bottom:5px}.sport-metric-grid strong{font:800 16px Outfit,sans-serif;overflow-wrap:anywhere}.sport-dashboard-note{font-size:11px;color:#788379;line-height:1.5}.modalbox>.sport-metric-grid{margin:15px 0 20px}.modalbox>.sport-metric-grid strong{font-size:15px}

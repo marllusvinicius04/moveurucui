@@ -321,3 +321,68 @@ body{background:#eef1fa} .app{background:#FAFAFA;box-shadow:0 18px 70px rgba(20,
 #track .runningstats{position:relative;z-index:2;margin-top:-23px;gap:8px}
 #track .runningstats div{border:1px solid #e6ebff;box-shadow:0 5px 18px #11111113;border-radius:17px;background:#fff}
 @media(max-width:360px){#track .map{height:clamp(330px,47dvh,470px)}.flash-side-arrow{width:29px;height:48px}}
+
+/* CORRESUL / PERFORMANCE EDITION — APENAS DESIGN, SEM ALTERAR LÓGICA */
+:root{--radius:16px}
+body{background:#0d0d0d}
+.app{background:#f5f5f5;box-shadow:0 0 65px #0006}
+.screen{padding-top:25px}
+h1,h2,h3,.number{font-family:Outfit,sans-serif}
+h1{font-weight:900;letter-spacing:-1.7px;line-height:1.04;text-transform:uppercase}
+h2{font-weight:900;letter-spacing:-.65px;text-transform:uppercase}
+.eyebrow{color:#555;font-weight:900;letter-spacing:1.9px}
+.sectionhead{margin-top:30px}
+.sectionhead h2{position:relative;padding-left:12px}
+.sectionhead h2:before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:5px;background:#FFBA00;transform:skew(-12deg);border-radius:2px}
+.card,.metric,.runningstats>div,.sport-dashboard,.weekly-challenge-card,.challenge-card{border:1px solid #e8e8e8;box-shadow:0 5px 0 #11111109,0 10px 25px #00000008}
+.metric{border-radius:13px;position:relative;overflow:hidden;padding-top:19px}
+.metric:before{content:"";position:absolute;top:0;left:0;width:42px;height:4px;background:#FFBA00;transform:skew(-25deg)}
+.metric strong{font-weight:900;letter-spacing:-.9px;color:#111}
+.metric .symbol{background:#fff2ca;color:#111;border-radius:9px}
+.quick{gap:8px}
+.quick button{background:#fff;border:1px solid #e5e5e5;border-radius:12px;box-shadow:0 4px 0 #11111112;transition:transform .15s,box-shadow .15s;text-transform:uppercase;letter-spacing:.1px;font-weight:900}
+.quick button:active{transform:translateY(3px);box-shadow:0 1px 0 #11111112}
+.quick .primary{background:#FFBA00;border-color:#FFBA00}
+.bigbtn{border-radius:12px;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 5px 0 #11111120;transition:transform .12s,box-shadow .12s}
+.bigbtn:active{transform:translateY(3px);box-shadow:0 2px 0 #11111120}
+.bigbtn.dark{background:#111;color:#fff}
+.pill{border-radius:10px;text-transform:uppercase;letter-spacing:.3px}
+.nav{background:#111111f7;border-top:2px solid #FFBA00;box-shadow:0 -8px 30px #0002}
+.nav button{color:#bdbdbd;font-weight:800;text-transform:uppercase}
+.nav button.on{color:#FFBA00}
+.nav button.on span{background:#FFBA00;color:#111;border-radius:9px}
+.floating-start{background:#FFBA00;color:#111;border:5px solid #111;box-shadow:0 8px 28px #0005,0 0 0 3px #FFBA00;font-weight:900}
+.float-ring{border-color:#111}
+.float-ring svg{fill:#111}
+.selector{gap:7px}
+.selector button{border:1px solid #e6e6e6;border-radius:10px;text-transform:uppercase;letter-spacing:.25px;font-weight:900}
+.selector button.on{background:#111;color:#FFBA00;border-color:#111;box-shadow:inset 0 -3px 0 #FFBA00}
+.goal{border:1px solid #e8e8e8;box-shadow:0 5px 0 #1111110b}
+.goal strong{font-weight:900}
+.goal button{background:#111;color:#FFBA00}
+#track .map{border:3px solid #111;border-radius:22px;box-shadow:0 11px 0 #11111112,0 18px 35px #0002}
+#track .runningstats{gap:7px;margin-top:-21px}
+#track .runningstats div{border:2px solid #111;border-radius:11px;box-shadow:0 5px 0 #11111118}
+#track .runningstats strong{font-weight:900;color:#111}
+#track .runningstats small{font-weight:900;letter-spacing:.6px}
+.sport-dashboard{border-radius:13px;border-top:4px solid #FFBA00}
+.sport-dashboard-title{font-weight:900;text-transform:uppercase;letter-spacing:1.3px}
+.sport-metric-grid>div{border-radius:9px;background:#f2f2f2;border-left:3px solid #FFBA00}
+.progressline,.challenge-progress-line{background:#e4e4e4}
+.progressline div,.challenge-progress-line span{background:#FFBA00}
+.chip{border-radius:7px;background:#ececec;text-transform:uppercase;font-weight:900}
+.profilehero{background:#111;color:#fff;border-radius:18px;box-shadow:inset 0 -5px 0 #FFBA00}
+.profilehero .pill{background:#FFBA00;color:#111}
+.profile-summary>div{background:#242424;border:1px solid #333}
+.profile-summary strong{color:#FFBA00}
+.banner-carousel{border-radius:16px;box-shadow:0 6px 0 #11111116}
+.flash-thumb{box-shadow:0 0 0 2px #111,0 0 0 4px #FFBA00}
+.flash-create{background:#FFBA00;color:#111}
+.flash-strip strong{font-weight:900}
+.ad-cta{background:#111;border-radius:13px;border-left:5px solid #FFBA00}
+.ad-cta .pill{background:#FFBA00;color:#111}
+.auth-box,.modalbox{border-radius:18px}
+.auth-brand-icon{background:#FFBA00;color:#111}
+.flash-side-arrow{background:#FFBA00;color:#111}
+.flash-side-arrow:active{background:#fff;color:#111}
+@media(max-width:360px){.quick button{font-size:10px}.nav button{font-size:9px}}

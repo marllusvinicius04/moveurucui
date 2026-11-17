@@ -285,3 +285,21 @@ body{background:#eef1fa} .app{background:#f6f8ff;box-shadow:0 18px 70px rgba(20,
 .flash-stage>img{width:calc(100% - 32px)!important;height:calc(100% - 40px)!important;max-width:100%;max-height:100%;object-fit:contain!important;border:clamp(5px,1.8vw,10px) solid #fff!important;border-bottom-width:clamp(10px,3vw,22px)!important;transform:rotate(-3deg)!important;box-sizing:border-box;pointer-events:none}
 .flash-stage .flash-info{pointer-events:auto}
 @media(max-width:390px){.flash-shell{height:96dvh;gap:8px}.flash-stage>img{width:calc(100% - 22px)!important;height:calc(100% - 26px)!important}}
+
+/* CorreSul Stories: imagem em tela, autor no topo, sem rodape social */
+.flash-overlay{background:#080d16!important;padding:0!important}
+.flash-shell{position:relative;width:min(100%,480px)!important;height:100dvh!important;max-height:none!important;gap:0!important;background:#080d16}
+.flash-progress{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 12px);left:12px;right:12px;z-index:25;pointer-events:none}
+.flash-toolbar{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 32px);right:13px;z-index:26;justify-content:flex-end!important}
+.flash-toolbar .flash-section-title{display:none!important}
+.flash-toolbar button{background:transparent!important;border:0!important;padding:5px!important;color:white!important;filter:drop-shadow(0 1px 3px #0009)}
+.flash-stage{flex:1!important;border-radius:0!important;background:#080d16!important;overflow:hidden!important}
+.flash-stage:before,.flash-stage:after{display:none!important}
+.flash-stage>img{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;border:0!important;transform:none!important;border-radius:0!important;box-shadow:none!important}
+.flash-stage .flash-info{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 46px)!important;left:14px!important;right:58px!important;bottom:auto!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;background:transparent!important;box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;color:#fff!important;pointer-events:none!important;text-shadow:0 1px 5px #000b}
+.flash-user-icon{width:32px;height:32px;border-radius:50%;border:1px solid #ffffff8a;background:#ffffff30;display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;font-size:15px}
+.flash-stage .flash-info strong{font-size:14px!important;font-weight:700!important;color:#fff!important}
+.flash-story-action{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);left:18px;right:18px;z-index:5;display:flex;justify-content:center}
+.flash-story-action button,.flash-story-action a{border:0;border-radius:12px;background:#0130ff;color:#fff;padding:11px 18px;font-weight:700;text-decoration:none}
+.flash-footer{position:absolute;bottom:8px;right:12px;z-index:3;opacity:0;pointer-events:none}
+@media(min-width:600px){.flash-shell{height:min(95dvh,900px)!important;margin:auto;border-radius:16px;overflow:hidden}.flash-overlay{padding:14px!important}}

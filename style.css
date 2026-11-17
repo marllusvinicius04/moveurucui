@@ -386,3 +386,29 @@ h2{font-weight:900;letter-spacing:-.65px;text-transform:uppercase}
 .flash-side-arrow{background:#FFBA00;color:#111}
 .flash-side-arrow:active{background:#fff;color:#111}
 @media(max-width:360px){.quick button{font-size:10px}.nav button{font-size:9px}}
+
+/* CORRESUL | MAPA IMERSIVO — apenas apresentação, sem alterações no sistema */
+#track{padding:18px 20px 26px;overflow:visible}
+#track>.top{margin:2px 0 13px;align-items:flex-start}
+#track>.top h1{font-size:clamp(25px,7vw,32px);line-height:1.08;letter-spacing:-1.2px}
+#track>.top .eyebrow{color:#6b6b6b;margin-bottom:5px}
+#track #gpsstatus{background:#111;color:#FFBA00;border:1px solid #2b2b2b;border-radius:999px;font-size:10px;padding:9px 10px;white-space:nowrap}
+#track .selector{margin:12px 0 16px;gap:7px}
+#track .selector button{min-width:0;padding:13px 4px;font-size:11px;border-radius:13px}
+#track .goal{position:relative;z-index:1100;margin:0 9px -93px;padding:13px 15px;min-height:78px;background:#fff;border:1px solid #ececec;border-radius:19px;box-shadow:0 12px 32px #00000026}
+#track .goal .small{font-size:10px;color:#6c6c6c;font-weight:800;letter-spacing:.4px}
+#track .goal strong{font-size:27px;color:#111}
+#track .goal button{width:40px;height:40px;background:#111;color:#FFBA00;border-radius:13px}
+#track .goal + div[style*="height:14px"]{height:0!important}
+#track #map.map{height:clamp(450px,65dvh,740px);margin:0 -20px;position:relative;border:0;border-radius:28px 28px 0 0;box-shadow:none;background:#e9e8e5;overflow:hidden}
+#track #map .leaflet-control-zoom{margin-bottom:135px;margin-right:13px;border:0;box-shadow:0 4px 16px #0002;border-radius:13px;overflow:hidden}
+#track #map .leaflet-control-zoom a{background:#fff;color:#111;border-bottom-color:#ededed}
+#track #map .leaflet-control-attribution{font-size:8px;background:#ffffffc9}
+#track .runningstats{position:relative;z-index:1050;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:-115px -11px 0;padding:12px 9px;background:#fff;border:1px solid #ededed;border-radius:23px;box-shadow:0 12px 36px #0000002b}
+#track .runningstats div{min-width:0;box-shadow:none;border:0;border-radius:14px;background:#f6f6f6;padding:16px 4px 13px}
+#track .runningstats div:first-child{background:#FFBA00}
+#track .runningstats strong{font-size:clamp(18px,5.3vw,25px);letter-spacing:-.8px;overflow-wrap:anywhere}
+#track .runningstats small{display:block;margin-top:5px;color:#555;font-size:9px;letter-spacing:.5px}
+#track #sportDashboard{margin-top:17px}
+#track #startcontrols .bigbtn,#track #activecontrols .bigbtn{min-height:59px;border-radius:15px}
+@media(max-width:360px){#track .goal{margin-left:4px;margin-right:4px}#track .runningstats{margin-left:-14px;margin-right:-14px;padding:8px 6px}#track .runningstats strong{font-size:18px}#track #gpsstatus{font-size:9px}}

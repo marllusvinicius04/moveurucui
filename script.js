@@ -472,8 +472,49 @@ function publicFlashContent(){return new Promise((resolve,reject)=>{
  sc.src=APPS_SCRIPT_URL+'?'+new URLSearchParams({action:'flashContent',cidade:data.localityCity||data.user?.cidade||'',uf:data.localityState||data.user?.uf||'',callback:cb,_:Date.now()});
  document.head.appendChild(sc)
 })}
-function chooseFlashPhoto(){if(!sessionToken){alert('Entre na sua conta para publicar.');return}document.getElementById('flashPhotoInput').click()}
-async function publishFlashPhoto(el){const f=el.files?.[0];if(!f)return;try{if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>3*1024*1024)throw Error('Use JPG, PNG ou WEBP com até 3 MB.');if(!confirm('Publicar esta foto para a comunidade por 24 horas?'))return;flashBusy('Publicando seu Flash...');const base64=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(',')[1]);r.onerror=()=>reject(Error('Não foi possível ler a foto'));r.readAsDataURL(f)});await api({action:'flashPublish',token:sessionToken,mimeType:f.type,base64});await Promise.allSettled([flashRefresh(),loadMyFlashes()]);flashNotice('Flash publicado com sucesso! Disponível por 24 horas.')}catch(e){flashNotice('Não foi possível publicar: '+e.message,true)}finally{flashBusyEnd();el.value=''}}
+function chooseFlashPhoto(){
+ if(!sessionToken){flashNotice('Entre na sua conta para publicar um Flash.',true);return}
+ const input=document.getElementById('flashPhotoInput');
+ if(!input){flashNotice('Seletor de fotos indisponível. Atualize a página.',true);return}
+ input.value='';
+ input.click();
+}
+let flashPublishing=false;
+async function publishFlashPhoto(el){
+ const f=el.files&&el.files[0];
+ if(!f)return;
+ if(flashPublishing){flashNotice('Uma foto já está sendo publicada. Aguarde.');return}
+ flashPublishing=true;
+ // Exibir o estado de publicação imediatamente após escolher a imagem,
+ // antes da leitura do arquivo ou de qualquer solicitação ao servidor.
+ flashBusy('Preparando foto para publicação...');
+ try{
+  if(!sessionToken)throw Error('Sua sessão expirou. Entre na conta novamente.');
+  if(!['image/jpeg','image/png','image/webp'].includes(f.type))throw Error('Selecione uma imagem JPG, PNG ou WEBP.');
+  if(f.size>3*1024*1024)throw Error('A foto deve ter até 3 MB.');
+  if(!f.size)throw Error('A foto selecionada está vazia.');
+  const base64=await new Promise((resolve,reject)=>{
+   const reader=new FileReader();
+   reader.onload=()=>{const value=String(reader.result||'').split(',')[1];value?resolve(value):reject(Error('Não foi possível preparar a imagem.'))};
+   reader.onerror=()=>reject(Error('Não foi possível ler a foto selecionada.'));
+   reader.onabort=()=>reject(Error('A leitura da foto foi interrompida.'));
+   reader.readAsDataURL(f);
+  });
+  flashBusy('Publicando seu Flash...');
+  const result=await api({action:'flashPublish',token:sessionToken,mimeType:f.type,base64});
+  if(result&&result.ok===false)throw Error(result.error||'O servidor recusou a publicação.');
+  flashBusy('Foto enviada! Atualizando os Flashes...');
+  await Promise.allSettled([flashRefresh(),loadMyFlashes()]);
+  flashNotice('Flash publicado com sucesso! Disponível por 24 horas.');
+ }catch(err){
+  console.error('Falha ao publicar Flash:',err);
+  flashNotice('Não foi possível publicar: '+(err&&err.message||'erro desconhecido'),true);
+ }finally{
+  flashBusyEnd();
+  flashPublishing=false;
+  el.value='';
+ }
+}
 async function loadMyFlashes(){if(!sessionToken)return;try{const r=await api({action:'flashMine',token:sessionToken});flashMy=r.flashes||[]}catch(e){console.warn(e)}}
 async function openFlashFeed(kind){flashFeed=kind;const overlay=document.getElementById('flashOverlay');overlay.hidden=false;document.getElementById('flashHeader').textContent=kind==='mine'?'Meus Flashes':kind==='sponsored'?'Pra você':'Flashes da comunidade';document.getElementById('flashCounter').textContent='Carregando';document.getElementById('flashStage').innerHTML='<div class="flash-loading" role="status"><span class="flash-spinner"></span><strong>Abrindo Flashes...</strong><small>Preparando suas imagens</small></div>';try{if(kind==='mine')await loadMyFlashes();else await flashRefresh();flashCurrent=kind==='mine'?[...flashMy]:kind==='sponsored'?flashShuffle(flashSponsored):flashShuffle(flashCommunity);flashIndex=0;if(overlay.hidden)return;flashDraw()}catch(e){document.getElementById('flashCounter').textContent='';document.getElementById('flashStage').innerHTML='<div class="flash-empty"><h3>Não foi possível carregar</h3><p>Verifique sua conexão e tente novamente.</p><button onclick="openFlashFeed(\''+kind+'\')">Tentar novamente</button></div>'}}
 function closeFlashFeed(){flashStopTimer();document.getElementById('flashOverlay').hidden=true;flashCurrent=[];document.getElementById('flashProgress').innerHTML=''}

@@ -412,3 +412,31 @@ h2{font-weight:900;letter-spacing:-.65px;text-transform:uppercase}
 #track #sportDashboard{margin-top:17px}
 #track #startcontrols .bigbtn,#track #activecontrols .bigbtn{min-height:59px;border-radius:15px}
 @media(max-width:360px){#track .goal{margin-left:4px;margin-right:4px}#track .runningstats{margin-left:-14px;margin-right:-14px;padding:8px 6px}#track .runningstats strong{font-size:18px}#track #gpsstatus{font-size:9px}}
+
+/* CorreSul — mapa com rolagem livre, controles próximos e visual mais leve */
+body{background:#ededed}
+.app{background:#fafafa}
+#track{background:#fafafa;padding-bottom:135px}
+#track .map-frame{position:relative;margin:0 -20px}
+#track #map.map{margin:0;background:#f1f0ec;touch-action:pan-y!important}
+#track #map .leaflet-container,#track #map .leaflet-pane,#track #map .leaflet-map-pane{touch-action:pan-y!important}
+#track #map .leaflet-control-zoom{display:none}
+#track .map-center-btn{position:absolute;right:16px;top:118px;z-index:1001;display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:#fff;color:#171717;border:1px solid #e6e6e6;box-shadow:0 5px 20px #0002}
+#track .map-center-btn svg{width:23px;height:23px;stroke-width:2.5}
+#track .goal{border:1px solid #e9e9e9;box-shadow:0 8px 25px #0002}
+#track .goal button{background:#FFBA00;color:#111}
+#track .runningstats{box-shadow:0 8px 25px #0002;border:1px solid #ececec}
+#track .runningstats div{background:#f7f7f7}
+#track .runningstats div:first-child{background:#FFBA00}
+#track .track-actions{position:relative;z-index:1051;margin:14px 0 0}
+#track .track-actions #startcontrols .bigbtn,#track .track-actions #activecontrols .bigbtn{margin-top:0;min-height:57px;background:#FFBA00;color:#111;border:0;box-shadow:0 4px 12px #00000012}
+#track .track-actions #activecontrols .bigbtn.dark{background:#fff;color:#111;border:2px solid #ddd}
+#track .track-actions #activecontrols .row{align-items:stretch}
+#track .track-actions #activecontrols .row button{flex:1;min-width:0}
+#track #sportDashboard{background:#fff;border:1px solid #eee;border-top:3px solid #FFBA00}
+#track #gpsstatus{background:#fff;color:#171717;border:1px solid #eee}
+.corresul-runner-marker{background:none;border:0}
+.corresul-runner-badge{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#FFBA00;color:#111;border:3px solid #fff;box-shadow:0 3px 14px #0005;font-size:23px;position:relative}
+.corresul-runner-badge:after{content:'';position:absolute;bottom:-7px;left:15px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #FFBA00}
+#track .selector button.on{background:#FFBA00;color:#111;border-color:#FFBA00;box-shadow:none}
+@media(max-width:360px){#track .map-center-btn{right:10px;top:110px}}

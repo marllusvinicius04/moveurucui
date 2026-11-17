@@ -166,3 +166,18 @@
 /* Área inteira da foto responde a toque para avançar ou voltar. */
 .flash-stage::before,.flash-stage::after{pointer-events:none}
 .flash-stage>img{cursor:pointer}
+
+/* Flashes: quatro atalhos compactos, com ícone de mão em Meus Flashes */
+.flash-strip{gap:7px!important;justify-content:space-between!important}
+.flash-tile{flex:0 1 25%!important;width:auto!important;min-width:0!important}
+.flash-tile strong{font-size:10px!important;white-space:normal!important;text-align:center;line-height:1.2}
+.flash-tile .flash-mine{display:flex;align-items:center;justify-content:center;color:#b6f43c}
+.flash-mine svg{width:29px!important;height:29px!important;stroke-width:2.1}
+.motivation-modal{position:relative;text-align:center;padding:8px 4px 3px}
+.motivation-modal small{font-weight:800;letter-spacing:1.5px;color:#7dbd18}
+.motivation-modal h2{margin:14px 0 10px;font-size:25px}
+.motivation-modal p{line-height:1.55;margin:0 0 22px}
+.motivation-mark{width:62px;height:62px;border-radius:20px;background:#e7f9d0;color:#32661e;display:flex;align-items:center;justify-content:center;margin:0 auto 15px}
+.motivation-mark svg{width:32px;height:32px}
+.motivation-close{position:absolute;top:-8px;right:0;border:0;background:transparent;color:inherit;padding:9px;cursor:pointer}
+.motivation-close svg{width:23px;height:23px}

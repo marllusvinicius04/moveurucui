@@ -303,3 +303,21 @@ body{background:#eef1fa} .app{background:#f6f8ff;box-shadow:0 18px 70px rgba(20,
 .flash-story-action button,.flash-story-action a{border:0;border-radius:12px;background:#0130ff;color:#fff;padding:11px 18px;font-weight:700;text-decoration:none}
 .flash-footer{position:absolute;bottom:8px;right:12px;z-index:3;opacity:0;pointer-events:none}
 @media(min-width:600px){.flash-shell{height:min(95dvh,900px)!important;margin:auto;border-radius:16px;overflow:hidden}.flash-overlay{padding:14px!important}}
+
+/* CorreSul: Stories com setas discretas e pausa por toque. */
+.flash-side-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:18;width:34px;height:54px;display:grid;place-items:center;border:1px solid #ffffff9c;border-radius:18px;background:#0130ffb8;color:#fff;font-size:15px;box-shadow:0 3px 12px #0003;touch-action:manipulation}
+.flash-side-prev{left:8px}.flash-side-next{right:8px}
+.flash-side-arrow:active{background:#0130ff}
+.flash-paused-mark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:16;background:#0130ffba;color:white;border-radius:50%;width:58px;height:58px;display:none;place-items:center;font-size:21px;pointer-events:none}
+.flash-stage.story-user-paused .flash-paused-mark{display:grid}
+/* Mapa de atividade: mais amplo, elevado e com contornos suaves, sem quadrado apertado. */
+#track.screen{padding-left:14px;padding-right:14px}
+#track>.top,#track>.selector,#track>.goal,#track>.runningstats,#track>.sport-dashboard,#track>.extra-stats,#track>#startcontrols,#track>#activecontrols,#track>#challengeTrackBanner{margin-left:6px;margin-right:6px}
+#track>.top{margin-bottom:12px}
+#track .selector{margin-top:12px;margin-bottom:10px}
+#track .goal{padding:10px 14px;border-radius:18px}
+#track .goal button{width:38px;height:38px}
+#track .map{height:clamp(370px,52dvh,590px);border-radius:30px;box-shadow:0 8px 28px #0130ff14;border:2px solid #fff;position:relative;margin-top:-3px}
+#track .runningstats{position:relative;z-index:2;margin-top:-23px;gap:8px}
+#track .runningstats div{border:1px solid #e6ebff;box-shadow:0 5px 18px #0130ff13;border-radius:17px;background:#fff}
+@media(max-width:360px){#track .map{height:clamp(330px,47dvh,470px)}.flash-side-arrow{width:29px;height:48px}}

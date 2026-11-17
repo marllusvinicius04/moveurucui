@@ -1,11 +1,7 @@
 let profilePhotoPreviewUrl='';
 
-const $=id=>document.getElementById(id);const KEY='moveplus_data_v1';let data;try{data=JSON.parse(localStorage.getItem(KEY))||{name:'Corredor de Uruçuí',runs:[]}}catch{data={name:'Corredor de Uruçuí',runs:[]}};const save=()=>localStorage.setItem(KEY,JSON.stringify(data));// Imagens de apresentação exibidas até o carregamento dos anúncios da região.
-const ads=[
- {image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2XONinUdQvVrucnMqhnu9HJwSE7QbD-stt0yNSCueZA&s=10',url:''},
- {image:'https://template.canva.com/EAFtI4Y2vqA/2/0/800w-_FM7CYxRDXQ.jpg',url:''},
- {image:'https://template.canva.com/EAE36LKvTAo/2/0/1600w-4TUPr4UZz6s.jpg',url:''}
-];let adindex=0;
+const $=id=>document.getElementById(id);const KEY='moveplus_data_v1';let data;try{data=JSON.parse(localStorage.getItem(KEY))||{name:'Corredor de Uruçuí',runs:[]}}catch{data={name:'Corredor de Uruçuí',runs:[]}};const save=()=>localStorage.setItem(KEY,JSON.stringify(data));// Publicidade exibida exclusivamente quando cadastrada no Dashboard.
+const ads=[];let adindex=0;
 function renderAd(){if(!ads.length){$('adimage').removeAttribute('src');$('adlink').removeAttribute('href');$('adlink').onclick=e=>e.preventDefault();$('dots').innerHTML='';$('adlink').style.display='none';return;}$('adlink').style.display='';const a=ads[adindex%ads.length],link=$('adlink');$('adimage').src=a.image;link.href=a.url||'#';link.onclick=a.url?null:(e)=>{e.preventDefault()};$('dots').innerHTML=ads.map((_,i)=>'<i class="dot '+(i===adindex?'on':'')+'"></i>').join('')}
 setInterval(()=>{if(ads.length>1){adindex=(adindex+1)%ads.length;renderAd()}},6000);
 const events=[];let activeChallengeId=null;
@@ -143,12 +139,8 @@ function openExternalSetting(type){const url=contactConfig[type];if(url){window.
 function confirmDeleteAccount(){openModal('<h2>Excluir minha conta definitivamente?</h2><p class="eventdetail">Seu perfil e seus dados vinculados à conta serão excluídos, incluindo sessões e lembretes. Esta ação não pode ser desfeita.</p><button class="bigbtn dark" onclick="closeModal()">Cancelar</button><button class="bigbtn danger-button" onclick="deleteLocalAccount()">Excluir minha conta</button>')}
 async function deleteLocalAccount(){const btn=document.querySelector('.danger-button');if(btn){btn.disabled=true;btn.textContent='Excluindo conta...'}try{if(!sessionToken)throw Error('Sessão inválida.');await api({action:'deleteAccount',token:sessionToken});sessionToken='';localStorage.removeItem(SESSION_KEY);localStorage.removeItem(ACCOUNT_CACHE_KEY);localStorage.removeItem(KEY);localStorage.removeItem('uem_active_user');if(running){clearInterval(timer);if(watchId!==null)navigator.geolocation.clearWatch(watchId);running=false;watchId=null}data={name:'Corredor de Uruçuí',runs:[]};closeModal();showScreen('home');authOpen()}catch(e){alert('Não foi possível excluir sua conta agora. Tente novamente.');if(btn){btn.disabled=false;btn.textContent='Excluir minha conta'}}}
 
-// Banners retangulares: ajuste imagens e destinos conforme os contratos publicitários.
-const leaderboardAds=[
- {image:'https://template.canva.com/EAFtI4Y2vqA/2/0/800w-_FM7CYxRDXQ.jpg',url:''},
- {image:'https://template.canva.com/EAE36LKvTAo/2/0/1600w-4TUPr4UZz6s.jpg',url:''},
- {image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2XONinUdQvVrucnMqhnu9HJwSE7QbD-stt0yNSCueZA&s=10',url:''}
-];
+// Banners da comunidade: somente anúncios publicados no Dashboard.
+const leaderboardAds=[];
 let boardIndex=0;
 function renderLeaderboards(){if(!leaderboardAds.length){document.querySelectorAll('.leaderboard-slot').forEach(slot=>slot.innerHTML='');return;}document.querySelectorAll('.leaderboard-slot').forEach((slot,idx)=>{const ad=leaderboardAds[(boardIndex+idx)%leaderboardAds.length];slot.innerHTML=`<a class="leaderboard-image" href="${ad.url||'#'}" ${ad.url?'target="_blank" rel="noopener noreferrer"':'onclick="event.preventDefault()"'} aria-label="Publicidade"><img src="${ad.image}" alt="Publicidade" loading="lazy"></a><div class="leaderboard-dots">${leaderboardAds.map((_,i)=>`<span class="${i===(boardIndex+idx)%leaderboardAds.length?'selected':''}"></span>`).join('')}</div>`})}
 renderLeaderboards();setInterval(()=>{if(leaderboardAds.length>1){boardIndex=(boardIndex+1)%leaderboardAds.length;renderLeaderboards()}},6000);

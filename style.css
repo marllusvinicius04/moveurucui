@@ -756,3 +756,17 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 .ururun-profile-brand{width:52px;height:52px;object-fit:contain;display:block;margin:13px 0 0;border-radius:12px}
 .auth-login-logo img{width:100%;height:100%;object-fit:contain;display:block}
 @media(max-width:350px){.ururun-header-logo{width:36px;height:36px;flex-basis:36px}#home>.top{gap:5px}}
+
+/* URURUN: cabeçalho responsivo com marca, saudação e foto clicável */
+#home>.top.ururun-home-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:5px;min-width:0}
+.ururun-header-identity{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+#home>.top .ururun-header-logo{display:block;flex:0 0 64px;width:64px;height:64px;max-width:64px;object-fit:contain;margin:0;border-radius:13px}
+.ururun-header-greeting{flex:1;min-width:0}
+.ururun-header-greeting .small{font-size:10px;font-weight:800;letter-spacing:1.1px;white-space:nowrap}
+.ururun-header-greeting h3{font-size:clamp(15px,4.5vw,19px);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#home>.top .ururun-profile-shortcut{flex:0 0 47px;width:47px;height:47px;padding:0;border-radius:50%;background:transparent;display:grid;place-items:center;overflow:visible}
+#home>.top .ururun-profile-shortcut .avatar{width:47px;height:47px;overflow:hidden;border-radius:50%;border:2px solid #FFBA00;background:#f1f1f1;display:grid;place-items:center}
+#home>.top .ururun-profile-shortcut .avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+#home>.top .ururun-profile-shortcut .avatar svg{width:23px;height:23px}
+@media(max-width:380px){#home>.top.ururun-home-header{gap:8px}.ururun-header-identity{gap:8px}#home>.top .ururun-header-logo{width:55px;height:55px;flex-basis:55px}.ururun-header-greeting h3{font-size:15px}#home>.top .ururun-profile-shortcut,#home>.top .ururun-profile-shortcut .avatar{width:42px;height:42px}#home>.top .ururun-profile-shortcut{flex-basis:42px}}
+@media(min-width:381px){#home>.top .ururun-header-logo{width:68px;height:68px;flex-basis:68px;max-width:68px}}

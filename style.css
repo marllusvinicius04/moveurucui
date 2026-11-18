@@ -814,3 +814,32 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 
 /* Centralização do título na tela de acesso */
 .auth-step[data-step="login"] .ururun-login-heading{text-align:center;width:100%;margin-left:auto;margin-right:auto;}
+
+/* URURUN: lobby exclusivo de desafios, sem alterar atividades livres */
+#track.challenge-session{background:linear-gradient(180deg,#fff8e3 0%,#f5f5f5 520px)}
+#track.challenge-session .top .eyebrow{color:#9c6a00}
+#track.challenge-session .top h1{font-size:25px}
+#track.challenge-session .selector,#track.challenge-session .goal{display:none!important}
+#track.challenge-session .map-frame{border:3px solid #ffba00;border-radius:25px;box-shadow:0 10px 30px #b17d0022;overflow:hidden}
+#track.challenge-session .map{border-radius:21px}
+.challenge-lobby{background:#111;color:white;border-radius:24px;padding:19px;margin:10px 0 16px;box-shadow:0 12px 28px #1112}
+.challenge-lobby-kicker{display:flex;gap:8px;align-items:center;color:#ffba00;font-size:10px;font-weight:900;letter-spacing:1.2px}
+.challenge-lobby-kicker span{margin-left:auto;color:white;letter-spacing:1px}
+.challenge-lobby-title{display:flex;gap:12px;align-items:center;margin:18px 0}
+.challenge-lobby-title>div{flex:1;min-width:0}.challenge-lobby-title small{color:#ffba00;font-size:10px;font-weight:800}
+.challenge-lobby-title h2{font-size:25px;line-height:1.1;margin:5px 0 7px;overflow-wrap:anywhere}
+.challenge-lobby-title p{color:#d1d1d1;font-size:12px;line-height:1.4}
+.challenge-lobby-title img{width:82px;height:82px;object-fit:cover;border-radius:16px}
+.challenge-lobby-title>.fa-medal{font-size:50px;color:#ffba00}
+.challenge-lobby-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.challenge-lobby-stats>div{padding:12px 7px;background:#252525;border-radius:12px;text-align:center;min-width:0}
+.challenge-lobby-stats small{display:block;color:#aaa;font-size:9px;margin-bottom:5px}
+.challenge-lobby-stats strong{font-size:13px;overflow-wrap:anywhere}
+.challenge-lobby-progress{height:9px;background:#424242;border-radius:20px;overflow:hidden;margin:16px 0 10px}
+.challenge-lobby-progress span{display:block;height:100%;background:#ffba00;transition:width .25s}
+.challenge-lobby-hint{color:#ccc;font-size:11px;line-height:1.5}
+.challenge-lobby-hint i{color:#ffba00;margin-right:4px}
+.challenge-lobby-sponsor{margin-top:13px;border-top:1px solid #333;padding-top:12px;color:#aaa;font-size:10px;display:flex;justify-content:space-between;gap:10px}
+.challenge-lobby-sponsor strong{color:#ffba00;font-size:12px}
+.ururun-share-brand img{display:block;max-width:155px;max-height:52px;object-fit:contain;object-position:left center}
+.ururun-share-brand strong{color:#ffba00;font-size:23px}

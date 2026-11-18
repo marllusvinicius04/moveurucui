@@ -811,3 +811,6 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 
 /* Convite URURUN e controle de narração */
 .invite-card{text-align:center;padding:25px 20px}.invite-icon{width:64px;height:64px;margin:0 auto 15px;background:#ffba00;border-radius:21px;display:grid;place-items:center}.invite-icon svg{width:32px;height:32px}.invite-card h3{font-size:19px;margin-bottom:9px}.invite-card p{line-height:1.6}.invite-copy{width:100%;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px}.invite-copy svg{width:17px;height:17px}.voice-test{background:#fff;border:1px solid #ddd;border-radius:12px;padding:9px 11px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:5px}.voice-test svg{width:16px;height:16px}.extra-stats{gap:10px}.voice-option{margin-left:auto}
+
+/* Centralização do título na tela de acesso */
+.auth-step[data-step="login"] .ururun-login-heading{text-align:center;width:100%;margin-left:auto;margin-right:auto;}

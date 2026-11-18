@@ -770,3 +770,17 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 #home>.top .ururun-profile-shortcut .avatar svg{width:23px;height:23px}
 @media(max-width:380px){#home>.top.ururun-home-header{gap:8px}.ururun-header-identity{gap:8px}#home>.top .ururun-header-logo{width:55px;height:55px;flex-basis:55px}.ururun-header-greeting h3{font-size:15px}#home>.top .ururun-profile-shortcut,#home>.top .ururun-profile-shortcut .avatar{width:42px;height:42px}#home>.top .ururun-profile-shortcut{flex-basis:42px}}
 @media(min-width:381px){#home>.top .ururun-header-logo{width:68px;height:68px;flex-basis:68px;max-width:68px}}
+
+/* URURUN - rodapé minimalista e localização responsiva */
+#home .footertext{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px!important;text-align:center!important;margin:34px auto 20px!important;padding:14px 10px!important;width:100%!important;}
+#home .footertext .ururun-footer-logo{display:block!important;width:clamp(105px,34vw,148px)!important;max-width:100%!important;height:auto!important;object-fit:contain!important;margin:0 auto!important;}
+#home .footertext .footer-made{display:block!important;font-size:12px!important;line-height:1.5!important;font-weight:600!important;letter-spacing:.1px!important;color:#444!important;}
+#home .location-card,#ranking .location-card{display:flex!important;align-items:center!important;gap:12px!important;padding:12px 13px!important;background:#fff!important;border:1px solid #e8e8e8!important;border-radius:17px!important;box-shadow:0 5px 20px rgba(0,0,0,.045)!important;color:#151515!important;min-width:0!important;}
+.location-card .location-card-icon{flex:0 0 38px!important;width:38px!important;height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:12px!important;background:#ffba00!important;color:#101010!important;}
+.location-card .location-card-icon svg{width:19px!important;height:19px!important;}
+.location-card .location-card-body{display:flex!important;flex-direction:column!important;gap:3px!important;flex:1 1 auto!important;min-width:0!important;line-height:1.3!important;}
+.location-card .location-card-body small{font-size:9px!important;font-weight:900!important;letter-spacing:1px!important;color:#888!important;}
+.location-card .location-card-body>span{font-size:12px!important;font-weight:750!important;color:#171717!important;overflow-wrap:anywhere!important;}
+.location-card .location-card-refresh{flex:0 0 36px!important;width:36px!important;height:36px!important;border:1px solid #ededed!important;background:#f7f7f7!important;color:#111!important;border-radius:11px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;cursor:pointer!important;}
+.location-card .location-card-refresh svg{width:16px!important;height:16px!important;}
+@media(max-width:380px){#home .location-card,#ranking .location-card{gap:9px!important;padding:10px!important}.location-card .location-card-icon{width:34px!important;height:34px!important;flex-basis:34px!important}.location-card .location-card-body>span{font-size:11px!important}}

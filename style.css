@@ -510,8 +510,7 @@ body{background:#f1f1f1}
 @media(max-width:360px){.floating-start{width:66px;height:66px;bottom:calc(111px + env(safe-area-inset-bottom,0px))}.nav button{font-size:9px}}
 
 /* Navegação inferior exclusiva da tela Início. Outras telas usam o botão de retorno. */
-.app .nav{display:none!important}
-.app:has(#home.active) .nav{display:flex!important}
+.app .nav{display:flex!important}
 .app:has(#home.active) .floating-start{bottom:calc(115px + env(safe-area-inset-bottom,0px))}
 .app:not(:has(#home.active)) .active-mini{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
 
@@ -784,3 +783,28 @@ body.auth-modal-open .auth-overlay{touch-action:pan-y!important}
 .location-card .location-card-refresh{flex:0 0 36px!important;width:36px!important;height:36px!important;border:1px solid #ededed!important;background:#f7f7f7!important;color:#111!important;border-radius:11px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;cursor:pointer!important;}
 .location-card .location-card-refresh svg{width:16px!important;height:16px!important;}
 @media(max-width:380px){#home .location-card,#ranking .location-card{gap:9px!important;padding:10px!important}.location-card .location-card-icon{width:34px!important;height:34px!important;flex-basis:34px!important}.location-card .location-card-body>span{font-size:11px!important}}
+
+/* URURUN | refinamento de identidade e navegação - 18/11/2026 */
+:root{--ururun-blue:#002a90;--ururun-green:#4fbf23}
+#home .ururun-home-headline{font-size:clamp(25px,6.4vw,28px);line-height:1.12;letter-spacing:-1.1px}
+/* Menu acessível em Início, Iniciar, Desafios, Progresso e Comunidade. */
+.app .nav{display:flex!important}
+.app{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+.screen{padding-bottom:30px}
+/* Não competir com a navegação inferior quando há treino ativo. */
+.app:not(:has(#home.active)) .active-mini{bottom:calc(93px + env(safe-area-inset-bottom,0px))}
+/* O botão de retorno continua disponível no Perfil, sem alterar o fluxo. */
+#track>.screen-back,#events>.screen-back,#progress>.screen-back,#ranking>.screen-back{display:none}
+/* Azul e verde entram como microdetalhes, sem substituir amarelo/preto/branco. */
+#home .eyebrow{color:var(--ururun-blue)}
+#home .ururun-home-headline>span{color:var(--ururun-green)!important}
+.location-card-icon{color:var(--ururun-blue)!important}
+.location-card-refresh:focus-visible,.nav button:focus-visible{outline:2px solid var(--ururun-blue);outline-offset:3px}
+#home .metric:nth-child(2) .symbol{color:var(--ururun-blue);background:#002a900d}
+#home .metric:nth-child(3) .symbol{color:var(--ururun-green);background:#4fbf2314}
+#progress .bargraph .bar{box-shadow:inset 0 -3px 0 #4fbf2340}
+#ranking .notice{border-left:3px solid var(--ururun-blue)}
+#events .ad-cta{border-bottom:3px solid var(--ururun-green)}
+.nav button[data-page="progress"].on span{box-shadow:inset 0 -3px 0 var(--ururun-blue)}
+.nav button[data-page="ranking"].on span{box-shadow:inset 0 -3px 0 var(--ururun-green)}
+@media(max-width:360px){#home .ururun-home-headline{font-size:25px}.app .nav{padding-left:2px;padding-right:2px}}

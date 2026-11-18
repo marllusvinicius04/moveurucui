@@ -120,7 +120,7 @@ async function shareComposerImage(platform='system'){
   // Web Share API: browsers cannot select a target app or force publication in Stories.
   // Let the user choose the installed destination in the system share sheet.
   if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
-   try{await navigator.share({files:[file],title:'Minha conquista • CorreSul'});return}
+   try{await navigator.share({files:[file]});return}
    catch(err){if(err&&err.name==='AbortError')return;}
   }
   saveShareFallback(file,platform);
